@@ -1,51 +1,52 @@
 <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-    <div>
-      <label for="name">Name:</label>
-      <input id="name" formControlName="name">
-      @if (myForm.get('name')?.invalid && myForm.get('name')?.touched) {
-        <div>
-          Name is required.
-        </div>
-      }
-    </div>
-    
-    <div>
-      <label for="email">Email:</label>
-      <input id="email" formControlName="email">
-      @if (myForm.get('email')?.invalid && myForm.get('email')?.touched) {
-        <div>
-          A valid email is required.
-        </div>
-      }
+    <div id="form">
+      <mat-form-field class="w-100">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
 
-    </div>
+      <mat-form-field class="w-100">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput formControlName="email" [errorStateMatcher]="matcher" placeholder="Ex. pat@example.com">
+        <mat-hint>Errors appear instantly!</mat-hint>
+        @if (myForm.get('email')?.hasError('email') && !myForm.get('email')?.hasError('required')) {
+          <mat-error>Please enter a valid email address</mat-error>
+        }
+        @if (myForm.get('email')?.hasError('required')) {
+          <mat-error>Email is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
 
-    <div formGroupName="address">
-      <div formGroupName="streetDetails">
-        <div>
-          <label for="streetName">Street Name:</label>
-          <input id="streetName" formControlName="streetName" name="kobe">
-          @if (myForm.get('address.streetDetails.streetName')?.invalid && myForm.get('address.streetDetails.streetName')?.touched) {
-            <div>
-              A valid street name is required.
-            </div>
-          }
+      <div formGroupName="address">
+        <div formGroupName="streetDetails">
+          <mat-form-field class="w-100">
+            <mat-label>Street Name</mat-label>
+            <input matInput formControlName="streetName">
+          </mat-form-field>
     
-        </div>
-    
-        <div>
-          <label for="streetNumber">Street Number:</label>
-          <input id="streetNumber" formControlName="streetNumber" name="bryant">
-          @if (myForm.get('address.streetDetails.streetNumber')?.invalid && myForm.get('address.streetDetails.streetNumber')?.touched) {
-            <div>
-              A valid street number is required.
-            </div>
-          }
-    
+          <mat-form-field class="w-100">
+            <mat-label>Street Number</mat-label>
+            <input matInput formControlName="streetNumber">
+          </mat-form-field>
         </div>
       </div>
-    </div>
 
-    <button type="submit">Submit</button>
+      <mat-form-field class="w-100">
+        <mat-label>Amount</mat-label>
+        <mat-select>
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="w-100">
+        <mat-label>Comments</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field>
+    </div>
+    
+    <div class="button-row">
+      <button mat-flat-button>Submit</button>
+      <button mat-button>Reset</button>
+    </div>
   </form>
-  <!-- <mat-slide-toggle>Toggle me!</mat-slide-toggle> -->

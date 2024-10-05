@@ -2,7 +2,10 @@ import { NgModule } from '@angular/core';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { ObservableFormComponent } from './observable-form.component';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     declarations: [
@@ -10,7 +13,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ],
     imports: [
       ReactiveFormsModule,
-      MatSlideToggleModule
+      MatFormFieldModule, 
+      MatInputModule, 
+      MatSelectModule,
+      MatButtonModule
     ],
     providers: [],
     bootstrap: [],

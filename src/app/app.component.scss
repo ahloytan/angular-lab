@@ -1,0 +1,12 @@
+.main {
+    background-image: url("../../public/swiss.jpg");
+    background-size: cover;
+}
+
+.form-holder {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 700px;
+    margin: 1rem auto;
+}

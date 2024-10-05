@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ControlEvent } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ControlEvent, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,6 +13,7 @@ export class ObservableFormComponent implements OnInit {
   formStatus: string = "";
   formValue: any;
   private subscription: Subscription = new Subscription();
+  matcher = new MyErrorStateMatcher();
 
   constructor(private fb: FormBuilder) {
     this.myForm = this.fb.group({
@@ -26,46 +28,51 @@ export class ObservableFormComponent implements OnInit {
         state: [''],
         zip: ['']
       })
-      // Add other controls as needed
     });
   }
 
+  //https://www.angulararchitects.io/en/blog/whats-new-in-angular-18/
+  //https://www.angularspace.com/unified-control-state-change-events-in-angular-18/
+  //https://medium.com/@chandantechie/angular-v18-unified-control-state-change-events-f4c99f7ba1f1
+  //https://netbasal.com/unified-control-state-change-events-in-angular-7e83c0504c8b
+  //https://dev.to/railsstudent/unified-control-state-change-events-working-with-reactive-form-is-never-the-same-in-angular-ipm
   ngOnInit() {
-    // // Subscribe to valueChanges observable
-    // const valueChangesSub = this.myForm.valueChanges.subscribe((value) => {
-    //   this.formValue = value;  // Get the current value of the form
-    //   console.log('Form Value Changed:', value);
-    // });
+    // Subscribe to valueChanges observable
+    const valueChangesSub = this.myForm.get('address.streetDetails.streetName')?.valueChanges.subscribe((value) => {
+      this.formValue = value;  // Get the current value of the form
+      console.log('Form Value Changed:', value);
+    });
 
-    // // Subscribe to statusChanges observable
-    // const statusChangesSub = this.myForm.statusChanges.subscribe((status) => {
-    //   this.formStatus = status;  // Get the current form status (VALID, INVALID, etc.)
-    //   console.log('Form Status Changed:', status);
-    // });
+    // Subscribe to statusChanges observable
+    const statusChangesSub = this.myForm.statusChanges.subscribe((status) => {
+      this.formStatus = status;  // Get the current form status (VALID, INVALID, etc.)
+      console.log('Form Status Changed:', status);
+    });
 
-    //https://www.angulararchitects.io/en/blog/whats-new-in-angular-18/
-    //https://www.angularspace.com/unified-control-state-change-events-in-angular-18/
-    //https://medium.com/@chandantechie/angular-v18-unified-control-state-change-events-f4c99f7ba1f1
-    //https://netbasal.com/unified-control-state-change-events-in-angular-7e83c0504c8b
-    //https://dev.to/railsstudent/unified-control-state-change-events-working-with-reactive-form-is-never-the-same-in-angular-ipm
+    this.subscription.add(valueChangesSub);
+    this.subscription.add(statusChangesSub);
+
+
     const changesSub = this.myForm.events.subscribe(e => {
       console.log('e', e);
     });
 
-    const changesStreetNameSub = this.myForm.get("address.streetDetails.streetName")?.events.subscribe((event) => {
-      console.log('STREET NAME', event.source);
-    });
-
-    // Add subscriptions to the subscription management
-    // this.subscription.add(valueChangesSub);
-    // this.subscription.add(statusChangesSub);
+    // const changesStreetNameSub = this.myForm.get("address.streetDetails.streetName")?.events.subscribe((event) => {
+    //   console.log('STREET NAME', event);
+    // });
     this.subscription.add(changesSub);
-    this.subscription.add(changesStreetNameSub);
-
+    // this.subscription.add(changesStreetNameSub);
   }
 
   onSubmit() {
     console.log("heloi");
   }
 
+}
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
 }
