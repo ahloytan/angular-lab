@@ -1,0 +1,51 @@
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="name">Name:</label>
+      <input id="name" formControlName="name">
+      @if (myForm.get('name')?.invalid && myForm.get('name')?.touched) {
+        <div>
+          Name is required.
+        </div>
+      }
+    </div>
+    
+    <div>
+      <label for="email">Email:</label>
+      <input id="email" formControlName="email">
+      @if (myForm.get('email')?.invalid && myForm.get('email')?.touched) {
+        <div>
+          A valid email is required.
+        </div>
+      }
+
+    </div>
+
+    <div formGroupName="address">
+      <div formGroupName="streetDetails">
+        <div>
+          <label for="streetName">Street Name:</label>
+          <input id="streetName" formControlName="streetName" name="kobe">
+          @if (myForm.get('address.streetDetails.streetName')?.invalid && myForm.get('address.streetDetails.streetName')?.touched) {
+            <div>
+              A valid street name is required.
+            </div>
+          }
+    
+        </div>
+    
+        <div>
+          <label for="streetNumber">Street Number:</label>
+          <input id="streetNumber" formControlName="streetNumber" name="bryant">
+          @if (myForm.get('address.streetDetails.streetNumber')?.invalid && myForm.get('address.streetDetails.streetNumber')?.touched) {
+            <div>
+              A valid street number is required.
+            </div>
+          }
+    
+        </div>
+      </div>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+  <!-- <mat-slide-toggle>Toggle me!</mat-slide-toggle> -->
