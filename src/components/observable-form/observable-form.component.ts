@@ -53,23 +53,26 @@ export class ObservableFormComponent implements OnInit {
     this.subscription.add(statusChangesSub);
 
 
+    //New observable angular v18
     const changesSub = this.myForm.events.subscribe(e => {
       console.log('e', e);
     });
+    // this.subscription.add(changesStreetNameSub);
+
 
     // const changesStreetNameSub = this.myForm.get("address.streetDetails.streetName")?.events.subscribe((event) => {
     //   console.log('STREET NAME', event);
     // });
+
     this.subscription.add(changesSub);
-    // this.subscription.add(changesStreetNameSub);
   }
 
   onSubmit() {
-    console.log("heloi");
+    console.log("submitting form...");
   }
 
   onReset() {
-    console.log("resetting...")
+    console.log("resetting form...")
   }
 
 }
