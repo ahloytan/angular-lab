@@ -1,5 +1,5 @@
 .main {
-    background-image: url("../../public/swiss.jpg");
+    background-image: url("/assets/swiss.jpg");
     background-size: cover;
 }
 
@@ -9,4 +9,9 @@
     width: 100%;
     max-width: 700px;
     margin: 1rem auto;
+}
+
+.widetime {
+    max-height: 64px;
+    max-width: 190px;
 }

@@ -12,8 +12,8 @@ export class ObservableFormComponent implements OnInit {
   myForm: FormGroup;
   formStatus: string = "";
   formValue: any;
-  private subscription: Subscription = new Subscription();
   matcher = new MyErrorStateMatcher();
+  private subscription: Subscription = new Subscription();
 
   constructor(private fb: FormBuilder) {
     this.myForm = this.fb.group({
@@ -66,6 +66,10 @@ export class ObservableFormComponent implements OnInit {
 
   onSubmit() {
     console.log("heloi");
+  }
+
+  onReset() {
+    console.log("resetting...")
   }
 
 }

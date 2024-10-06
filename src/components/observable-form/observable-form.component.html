@@ -1,14 +1,17 @@
-<form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="myForm">
     <div id="form">
       <mat-form-field class="w-100">
         <mat-label>Name</mat-label>
-        <input matInput formControlName="name">
+        <input type="text" matInput formControlName="name">
+        <mat-hint>Errors appear instantly!</mat-hint>
+        @if (myForm.get('name')?.hasError('required')) {
+          <mat-error>Please enter a name!</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field class="w-100">
         <mat-label>Email</mat-label>
         <input type="email" matInput formControlName="email" [errorStateMatcher]="matcher" placeholder="Ex. pat@example.com">
-        <mat-hint>Errors appear instantly!</mat-hint>
         @if (myForm.get('email')?.hasError('email') && !myForm.get('email')?.hasError('required')) {
           <mat-error>Please enter a valid email address</mat-error>
         }
@@ -34,8 +37,8 @@
       <mat-form-field class="w-100">
         <mat-label>Amount</mat-label>
         <mat-select>
-          <mat-option value="one">First option</mat-option>
-          <mat-option value="two">Second option</mat-option>
+          <mat-option value="500">500</mat-option>
+          <mat-option value="1000">1000</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -46,7 +49,7 @@
     </div>
     
     <div class="button-row">
-      <button mat-flat-button>Submit</button>
-      <button mat-button>Reset</button>
+      <button mat-flat-button type="submit" (click)="onSubmit()">Submit</button>
+      <button mat-button type="reset" (click)="onReset()">Reset</button>
     </div>
   </form>
