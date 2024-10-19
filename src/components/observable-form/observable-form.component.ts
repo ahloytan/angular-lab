@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ControlEvent, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ControlEvent, FormControl, FormGroupDirective, NgForm, PristineChangeEvent, TouchedChangeEvent, ValueChangeEvent, StatusChangeEvent, FormSubmittedEvent, FormResetEvent } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { Subscription } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, filter, merge, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-observable-form',
@@ -19,6 +19,7 @@ export class ObservableFormComponent implements OnInit {
     this.myForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      amount: [''],
       address: this.fb.group({
         streetDetails: this.fb.group({
           streetName: [''],
@@ -31,40 +32,84 @@ export class ObservableFormComponent implements OnInit {
     });
   }
 
-  //https://www.angulararchitects.io/en/blog/whats-new-in-angular-18/
-  //https://www.angularspace.com/unified-control-state-change-events-in-angular-18/
-  //https://medium.com/@chandantechie/angular-v18-unified-control-state-change-events-f4c99f7ba1f1
-  //https://netbasal.com/unified-control-state-change-events-in-angular-7e83c0504c8b
-  //https://dev.to/railsstudent/unified-control-state-change-events-working-with-reactive-form-is-never-the-same-in-angular-ipm
   ngOnInit() {
-    // Subscribe to valueChanges observable
-    const valueChangesSub = this.myForm.get('address.streetDetails.streetName')?.valueChanges.subscribe((value) => {
-      this.formValue = value;  // Get the current value of the form
-      console.log('Form Value Changed:', value);
-    });
+    this.subscribeEach();
+    // this.subscribeWithMerge();
+    // this.subscribeWithCombinedLatest();
+  }
 
-    // Subscribe to statusChanges observable
-    const statusChangesSub = this.myForm.statusChanges.subscribe((status) => {
-      this.formStatus = status;  // Get the current form status (VALID, INVALID, etc.)
-      console.log('Form Status Changed:', status);
-    });
-
-    this.subscription.add(valueChangesSub);
-    this.subscription.add(statusChangesSub);
-
-
-    //New observable angular v18
-    const changesSub = this.myForm.events.subscribe(e => {
-      console.log('e', e);
-    });
-    // this.subscription.add(changesStreetNameSub);
-
-
-    // const changesStreetNameSub = this.myForm.get("address.streetDetails.streetName")?.events.subscribe((event) => {
-    //   console.log('STREET NAME', event);
+  subscribeEach() {
+    // // Subscribe to valueChanges observable
+    // const valueChangesSub = this.myForm.get('address.streetDetails.streetName')?.valueChanges.subscribe((value) => {
+    //   this.formValue = value;  // Get the current value of the form
+    //   console.log('Form Value Changed using .valueChanges():', value);
     // });
 
+    // // Subscribe to statusChanges observable
+    // const statusChangesSub = this.myForm.statusChanges.subscribe((status) => {
+    //   this.formStatus = status;  // Get the current form status (VALID, INVALID, etc.)
+    //   console.log('Form Status Changed using .statusChanges():', status);
+    // });
+
+    // this.subscription.add(valueChangesSub);
+    // this.subscription.add(statusChangesSub);
+
+    //New observable angular v18
+    const changesSub = this.myForm.events.subscribe((event) => {
+
+      if (event instanceof StatusChangeEvent) {
+        console.log("STATUS CHANGE EVENT using new observable", event);
+      }
+      if (event instanceof ValueChangeEvent) {
+        console.log("VALUE CHANGE EVENT using new observable", event);
+      }
+      if (event instanceof TouchedChangeEvent) {
+        console.log("TOUCHED CHANGE EVENT using new observable", event);
+      }
+      if (event instanceof PristineChangeEvent) {
+        console.log("PRISTINE CHANGE EVENT using new observable", event);
+      }
+      if (event instanceof FormSubmittedEvent) {
+        console.log("FORM SUBMITTED using new observable", event);
+      }
+      if (event instanceof FormResetEvent) {
+        console.log("FORM RESET using new observable", event);
+      }
+    });
     this.subscription.add(changesSub);
+    
+    //Note: The below console.log will log the 'StatusChangeEvent' because debounceTime only emits the latest notification.
+    //If you require the other events, you might have to do some extra transformation like .filter
+    //filter(x => !(x instanceof StatusChangeEvent))
+    //or just use the specific methods like .valueChanges or .statusChanges depending on your use case
+    //this.myForm.events.pipe(debounceTime(200)).subscribe((event) => console.log(event))
+    const changesStreetNameSub = this.myForm.get("address.streetDetails.streetName")?.events.subscribe((event) => {
+      console.log('STREET NAME using new observable', event);
+    });
+    this.subscription.add(changesStreetNameSub);
+  }
+
+  //Upon any subscribed child emits an event, the subscription will be triggered
+  subscribeWithMerge() {
+    const changesSub: any = this.myForm.events
+    const changesStreetNameSub: any = this.myForm.get("address.streetDetails.streetName")?.events;
+    const combinedSub = merge(changesSub, changesStreetNameSub).subscribe((event) => {
+      console.log('New observable with merge()', event);
+    });
+
+    this.subscription.add(combinedSub);
+  }
+
+  //After all children (streetNumber, streetName) in combineLatest have been triggered once, value will be outputted 
+  subscribeWithCombinedLatest() {
+    const changesStreetNumberSub: any = this.myForm.get("address.streetDetails.streetNumber")?.events;
+    const changesAmountSub: any = this.myForm.get("amount")?.events;
+    const changesStreetNameSub: any = this.myForm.get("address.streetDetails.streetName")?.events;
+    const combinedSub = combineLatest(changesStreetNumberSub, changesAmountSub, changesStreetNameSub).subscribe((event) => {
+      console.log('New observable with combinedLatest()', event);
+    });
+    
+    this.subscription.add(combinedSub);
   }
 
   onSubmit() {
@@ -73,6 +118,10 @@ export class ObservableFormComponent implements OnInit {
 
   onReset() {
     console.log("resetting form...")
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 }

@@ -36,17 +36,18 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 2. Feel free to contact me if there are issues or if there are opportunities that I can help you with!
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Code scaffolding
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# Notes/Observations
+1. Although `.events()` provides the source (formControl) that's emitting the value, it's name is always `FormControl2` even if 2 separate forms are created
+2. As an example, if you subscribe to `myForm`, which is the parent form group, and you change the value of `streetName`, the source doesn't tell you that the change comes from `streetName`. Instead, the source will be `FormControl2`
+3. Chaining `.events()` with `.pipe(debounceTime(x))` will only return the most recent notification. In order of emission (first to last): `StatusChangeEvent` --> `ValueChangedEvent` --> `TouchedChangedEvent`
 
-## Build
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+# References
+1. https://dev.to/railsstudent/unified-control-state-change-events-working-with-reactive-form-is-never-the-same-in-angular-ipm
+2. https://github.com/angular/angular/issues/10887
+3. https://github.com/angular/angular/issues/42862
+4. https://medium.com/@chandantechie/angular-v18-unified-control-state-change-events-f4c99f7ba1f1
+5. https://medium.com/@pudalepramod/commonly-used-rxjs-features-with-reactive-forms-3e072b14a9f4
+6. https://www.angulararchitects.io/en/blog/whats-new-in-angular-18/
+7. https://www.angularspace.com/unified-control-state-change-events-in-angular-18/
+8. https://netbasal.com/unified-control-state-change-events-in-angular-7e83c0504c8b
+9. https://stackoverflow.com/questions/39142616/what-are-the-practical-differences-between-template-driven-and-reactive-forms
