@@ -51,3 +51,6 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 7. https://www.angularspace.com/unified-control-state-change-events-in-angular-18/
 8. https://netbasal.com/unified-control-state-change-events-in-angular-7e83c0504c8b
 9. https://stackoverflow.com/questions/39142616/what-are-the-practical-differences-between-template-driven-and-reactive-forms
+10. https://stackoverflow.com/questions/56729248/how-to-get-formcontrolname-of-the-field-which-value-changed-in-angular-reactive
+11. https://stackoverflow.com/questions/60016114/angular-reactuve-form-control-valuechanges-get-value-changed-field-name-prev-v
+    

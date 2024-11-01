@@ -13,6 +13,7 @@ export class ObservableFormComponent implements OnInit {
   formStatus: string = "";
   formValue: any;
   matcher = new MyErrorStateMatcher();
+  prevValues: any;
   private subscription: Subscription = new Subscription();
 
   constructor(private fb: FormBuilder) {
@@ -55,14 +56,22 @@ export class ObservableFormComponent implements OnInit {
     // this.subscription.add(statusChangesSub);
 
     //New observable angular v18
+    this.prevValues = {...this.myForm.value};
     const changesSub = this.myForm.events.subscribe((event) => {
-
+      
       if (event instanceof StatusChangeEvent) {
         console.log("STATUS CHANGE EVENT using new observable", event);
       }
+
       if (event instanceof ValueChangeEvent) {
+        const res = event.value;
+        const key = Object.keys(res).find(k=> res[k] !== this.prevValues[k]);
+        this.prevValues = {...this.myForm.value};
+        console.log("PROPERTY CHANGED:", key);
         console.log("VALUE CHANGE EVENT using new observable", event);
+
       }
+
       if (event instanceof TouchedChangeEvent) {
         console.log("TOUCHED CHANGE EVENT using new observable", event);
       }
@@ -83,6 +92,7 @@ export class ObservableFormComponent implements OnInit {
     //filter(x => !(x instanceof StatusChangeEvent))
     //or just use the specific methods like .valueChanges or .statusChanges depending on your use case
     //this.myForm.events.pipe(debounceTime(200)).subscribe((event) => console.log(event))
+
     const changesStreetNameSub = this.myForm.get("address.streetDetails.streetName")?.events.subscribe((event) => {
       console.log('STREET NAME using new observable', event);
     });
