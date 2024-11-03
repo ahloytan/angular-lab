@@ -29,7 +29,8 @@ export class ObservableFormComponent implements OnInit {
         city: [''],
         state: [''],
         zip: ['']
-      })
+      }),
+      description: ['']
     });
   }
 
@@ -64,12 +65,11 @@ export class ObservableFormComponent implements OnInit {
       }
 
       if (event instanceof ValueChangeEvent) {
-        const res = event.value;
-        const key = Object.keys(res).find(k=> res[k] !== this.prevValues[k]);
+        const values = event.value;
+        const changedProperty = Object.keys(values).find((key)=> values[key] !== this.prevValues[key]);
         this.prevValues = {...this.myForm.value};
-        console.log("PROPERTY CHANGED:", key);
+        console.log("PROPERTY CHANGED:", changedProperty);
         console.log("VALUE CHANGE EVENT using new observable", event);
-
       }
 
       if (event instanceof TouchedChangeEvent) {
@@ -93,10 +93,10 @@ export class ObservableFormComponent implements OnInit {
     //or just use the specific methods like .valueChanges or .statusChanges depending on your use case
     //this.myForm.events.pipe(debounceTime(200)).subscribe((event) => console.log(event))
 
-    const changesStreetNameSub = this.myForm.get("address.streetDetails.streetName")?.events.subscribe((event) => {
-      console.log('STREET NAME using new observable', event);
-    });
-    this.subscription.add(changesStreetNameSub);
+    // const changesStreetNameSub = this.myForm.get("address.streetDetails.streetName")?.events.subscribe((event) => {
+    //   console.log('STREET NAME using new observable', event);
+    // });
+    // this.subscription.add(changesStreetNameSub);
   }
 
   //Upon any subscribed child emits an event, the subscription will be triggered

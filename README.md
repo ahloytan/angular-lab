@@ -1,7 +1,7 @@
 <a name="readme-top"></a>
-# AngularObservables
+# Nnew Angular Observable
 
-[Angular CLI](https://github.com/angular/angular-cli) version 18.2.6 to introduce the new form observable in Angular v18
+[Angular CLI](https://github.com/angular/angular-cli) v18 | Unified state control source
 
 ## Sandbox
 https://codesandbox.io/p/github/ahloytan/angular-observables/master
@@ -13,10 +13,7 @@ https://codesandbox.io/p/github/ahloytan/angular-observables/master
 
 ## Start up project
 1. If you are launching this project for the first time, install the necessary npm libraries by `npm i`
-2. Start the frontend by `npm run start`
-
-## Development server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+2. Start the frontend by `npm run start`. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
 # Tech Stack
 
@@ -40,9 +37,10 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 # Notes/Observations
-1. Although `.events()` provides the source (formControl) that's emitting the value, it's name is always `FormControl2` even if 2 separate forms are created
-2. As an example, if you subscribe to `myForm`, which is the parent form group, and you change the value of `streetName`, the source doesn't tell you that the change comes from `streetName`. Instead, the source will be `FormControl2`
-3. Chaining `.events()` with `.pipe(debounceTime(x))` will only return the most recent notification. In order of emission (first to last): `StatusChangeEvent` --> `ValueChangedEvent` --> `TouchedChangedEvent`
+1. Main bulk of code located in `src/app/components/observable-form/observable-form.component.ts`
+2. Although `.events()` provides the source (formControl) that's emitting the value, it's name is always `FormControl2` even if 2 separate forms are created
+3. As an example, if you subscribe to `myForm`, which is the parent form group, and you change the value of `streetName`, the source doesn't tell you that the change comes from `streetName`. Instead, the source will be `FormControl2`
+4. Chaining `.events()` with `.pipe(debounceTime(x))` will only return the most recent notification. In order of emission (first to last): `StatusChangeEvent` --> `ValueChangedEvent` --> `TouchedChangedEvent`
 
 # References
 1. https://dev.to/railsstudent/unified-control-state-change-events-working-with-reactive-form-is-never-the-same-in-angular-ipm
