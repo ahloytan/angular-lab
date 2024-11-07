@@ -1,5 +1,5 @@
 <a name="readme-top"></a>
-# Nnew Angular Observable
+# New Angular Observable
 
 [Angular CLI](https://github.com/angular/angular-cli) v18 | Unified state control source
 
@@ -41,6 +41,7 @@ https://codesandbox.io/p/github/ahloytan/angular-observables/master
 2. Although `.events()` provides the source (formControl) that's emitting the value, it's name is always `FormControl2` even if 2 separate forms are created
 3. As an example, if you subscribe to `myForm`, which is the parent form group, and you change the value of `streetName`, the source doesn't tell you that the change comes from `streetName`. Instead, the source will be `FormControl2`
 4. Chaining `.events()` with `.pipe(debounceTime(x))` will only return the most recent notification. In order of emission (first to last): `StatusChangeEvent` --> `ValueChangedEvent` --> `TouchedChangedEvent`
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 # References
 1. https://dev.to/railsstudent/unified-control-state-change-events-working-with-reactive-form-is-never-the-same-in-angular-ipm
@@ -54,4 +55,4 @@ https://codesandbox.io/p/github/ahloytan/angular-observables/master
 9. https://stackoverflow.com/questions/39142616/what-are-the-practical-differences-between-template-driven-and-reactive-forms
 10. https://stackoverflow.com/questions/56729248/how-to-get-formcontrolname-of-the-field-which-value-changed-in-angular-reactive
 11. https://stackoverflow.com/questions/60016114/angular-reactuve-form-control-valuechanges-get-value-changed-field-name-prev-v
-    
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
