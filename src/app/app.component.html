@@ -229,10 +229,15 @@
             <clipPath id="a"><path fill="#fff" d="M0 0h982v239H0z" /></clipPath>
           </defs>
         </svg>
-        <img src="/assets/widetime-cat.gif" class="widetime" alt="">
+        <img src="/assets/widetime-cat.gif" class="widetime" alt="widetime-cat">
         <h1>Hello, Angular merchants</h1>
         <p>Congratulations! Your app is running. 🎉 Open up the developer tools and observe the console.logs~</p>
-      </div>
+        <button id="go-to-new-page" mat-flat-button type="button" (click)="goToNewPage()">Go to My New Page</button>
+        @if (_swUpdateService.hasUpdate) {
+          <div>
+            <button mat-flat-button type="button" (click)="_swUpdateService.reloadSite()">Go to My New Page</button>
+          </div>
+        }      </div>
       <div class="divider" role="separator" aria-label="Divider"></div>
       <div class="right-side">
         <div class="pill-group">
@@ -343,4 +348,4 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
 
-<router-outlet />
+<router-outlet></router-outlet>

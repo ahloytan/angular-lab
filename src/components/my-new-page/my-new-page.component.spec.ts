@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ObservableFormComponent } from './observable-form.component';
+import { MyNewPageComponent } from './my-new-page.component';
 
-describe('ObservableFormComponent', () => {
-  let component: ObservableFormComponent;
-  let fixture: ComponentFixture<ObservableFormComponent>;
+describe('MyNewPageComponent', () => {
+  let component: MyNewPageComponent;
+  let fixture: ComponentFixture<MyNewPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ObservableFormComponent]
+      imports: [MyNewPageComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ObservableFormComponent);
+    fixture = TestBed.createComponent(MyNewPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

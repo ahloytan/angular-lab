@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
-
 import { ReactiveFormsModule } from '@angular/forms';
-import { ObservableFormModule } from '../components/observable-form/observable-form.module';
 import { RouterOutlet } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
     declarations: [
@@ -10,7 +9,9 @@ import { RouterOutlet } from '@angular/router';
     imports: [
         RouterOutlet,
         ReactiveFormsModule,
-        ObservableFormModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          registrationStrategy: 'registerWhenStable:30000'
+        })
     ],
     providers: [],
     bootstrap: [],
