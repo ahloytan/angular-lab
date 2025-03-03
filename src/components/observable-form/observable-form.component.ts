@@ -1,25 +1,27 @@
 import { combineLatest, debounceTime, distinctUntilChanged, filter, merge, Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { FormGroup, FormBuilder, Validators, ControlEvent, FormControl, FormGroupDirective, NgForm, PristineChangeEvent, TouchedChangeEvent, ValueChangeEvent, StatusChangeEvent, FormSubmittedEvent, FormResetEvent } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-observable-form',
-  standalone: true,
   templateUrl: './observable-form.component.html',
   styleUrl: './observable-form.component.scss',
-  imports: [      
-    ReactiveFormsModule,
-    MatFormFieldModule, 
-    MatInputModule, 
-    MatSelectModule,
-    MatButtonModule
-  ]
+  imports: [CommonModule,
+      MatButtonModule,
+      MatFormFieldModule, 
+      MatIconModule,
+      MatInputModule, 
+      MatSelectModule,
+      ReactiveFormsModule],
+  standalone: true
 })
 export class ObservableFormComponent implements OnInit {
   myForm: FormGroup;

@@ -3,19 +3,21 @@ import { SwUpdate } from '@angular/service-worker';
 import { interval } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root', // This makes the service available globally
+  providedIn: 'root',
 })
-export class swUpdateService {
+export class SwUpdateService {
   hasUpdate = false;
 
   constructor(private swUpdate: SwUpdate) {
     if (this.swUpdate.isEnabled) {
-      // Check for updates every 30 seconds
-      interval(30000).subscribe(() => {
-        this.swUpdate.checkForUpdate().then(() => {
-          console.log("Checking for updates every 30s");
-        });
-      });
+      console.log("Service worker is registered!"); 
+
+      // // Check for updates every 30 seconds
+      // interval(30000).subscribe(() => {
+      //   this.swUpdate.checkForUpdate().then(() => {
+      //     console.log("Checking for updates every 30s");
+      //   });
+      // });
     }
 
     // Listen for version updates

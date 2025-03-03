@@ -30,5 +30,27 @@
         ]
       }
     }
+  ],
+  "dataGroups": [
+    {
+      "name":"api-performance",
+      "urls":["/news?select=%2A"],
+      "cacheConfig": {
+      "strategy": "performance",
+      "maxSize": 100,
+      "maxAge": "3d",
+      "timeout": "10s"
+      }
+    },
+    {
+      "name":"api-freshness",
+      "urls":["/news"],
+      "cacheConfig": {
+      "strategy": "freshness",
+      "maxSize": 100,
+      "maxAge": "3d",
+      "timeout": "10s"
+      }
+    }
   ]
 }

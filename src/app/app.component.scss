@@ -4,11 +4,13 @@
     background-size: cover;
 }
 
-#go-to-new-page {
+.button-holder {
     margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
 }
 
-.form-holder {
+.content {
     display: flex;
     justify-content: space-around;
     width: 100%;
