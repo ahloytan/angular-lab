@@ -42,4 +42,8 @@ export class AppComponent {
   goToNewPage(): void {
     this._router.navigate(['/my-new-page']);
   }
+
+  goToNewsTablePage(): void {
+    this._router.navigate(['/news-table']);
+  }
 }

@@ -14,13 +14,15 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'app-observable-form',
   templateUrl: './observable-form.component.html',
   styleUrl: './observable-form.component.scss',
-  imports: [CommonModule,
-      MatButtonModule,
-      MatFormFieldModule, 
-      MatIconModule,
-      MatInputModule, 
-      MatSelectModule,
-      ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatFormFieldModule, 
+    MatIconModule,
+    MatInputModule, 
+    MatSelectModule,
+    ReactiveFormsModule
+  ],
   standalone: true
 })
 export class ObservableFormComponent implements OnInit {

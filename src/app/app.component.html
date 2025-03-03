@@ -237,10 +237,14 @@
             <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="home"></mat-icon>
             Go to Home
           </button>
-          <button mat-flat-button type="button" (click)="goToNewPage()">
-            <mat-icon aria-hidden="false" aria-label="add note icon" fontIcon="note_add"></mat-icon>
-            Go to My New Page
+          <button mat-flat-button type="button" (click)="goToNewsTablePage()">
+            <mat-icon aria-hidden="false" aria-label="add note icon" fontIcon="table_chart"></mat-icon>
+            Go to News Table Page
           </button>
+          <!-- <button mat-flat-button type="button" (click)="goToNewPage()">
+            <mat-icon aria-hidden="false" aria-label="add note icon" fontIcon="note_add"></mat-icon>
+            Go to New Page
+          </button> -->
           @if (_swUpdateService.hasUpdate) {
             <button mat-flat-button type="button" (click)="_swUpdateService.reloadSite()">
               <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="refresh"></mat-icon>
@@ -343,9 +347,7 @@
     </div>
   </div>
   <div>
-    <div class="content">
-      <router-outlet></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
   </div>
 </main>
 
