@@ -46,4 +46,12 @@ export class AppComponent {
   goToNewsTablePage(): void {
     this._router.navigate(['/news-table']);
   }
+
+  // ngOnDestroy() {
+  //   navigator.serviceWorker.getRegistrations().then(registrations => {
+  //     for (const registration of registrations) {
+  //         registration.unregister();
+  //     } 
+  //   });
+  // }
 }

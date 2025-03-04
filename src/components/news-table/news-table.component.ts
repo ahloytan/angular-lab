@@ -18,6 +18,7 @@ export class NewsTableComponent {
   displayedColumns: string[] = ['id', 'description', 'created_at'];
   isLoading: boolean = false;
   news: any = [];
+  newsCached: any = [];
 
   constructor(
     public readonly supabaseService: SupabaseService
@@ -26,6 +27,7 @@ export class NewsTableComponent {
 
   ngOnInit() {
     this.getNews();
+    this.getNewsCached();
   }
 
   async getNews() {
@@ -35,6 +37,18 @@ export class NewsTableComponent {
       console.error('Error fetching news:', error);
     } else {
       this.news = data;
+    }
+    
+    this.isLoading = false;
+  }
+
+  async getNewsCached() {
+    this.isLoading = true;
+    const { data, error } = await this.supabaseService.getNewsCached();
+    if (error) {
+      console.error('Error fetching news:', error);
+    } else {
+      this.newsCached = data;
     }
     
     this.isLoading = false;

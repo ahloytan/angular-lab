@@ -40,6 +40,12 @@ export class SupabaseService {
       .select()
   }
 
+  async getNewsCached() {
+    return this.supabase
+      .from('news_duplicate')
+      .select()
+  }
+
   authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
     return this.supabase.auth.onAuthStateChange(callback)
   }

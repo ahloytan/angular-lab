@@ -12,12 +12,12 @@ export class SwUpdateService {
     if (this.swUpdate.isEnabled) {
       console.log("Service worker is registered!"); 
 
-      // // Check for updates every 30 seconds
-      // interval(30000).subscribe(() => {
-      //   this.swUpdate.checkForUpdate().then(() => {
-      //     console.log("Checking for updates every 30s");
-      //   });
-      // });
+      // Check for updates every 30 seconds
+      interval(30000).subscribe(() => {
+        this.swUpdate.checkForUpdate().then(() => {
+          console.log("Checking for updates every 30s");
+        });
+      });
     }
 
     // Listen for version updates
