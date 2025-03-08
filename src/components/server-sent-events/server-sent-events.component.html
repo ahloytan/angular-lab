@@ -1,0 +1,10 @@
+<div id="userId">
+    <mat-form-field>
+      <mat-label>Enter a number</mat-label>
+      <input matInput type="number" [(ngModel)]="userId">
+    </mat-form-field>
+    <button mat-flat-button (click)="sendReminder()" [disabled]="isLoading">
+      <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="widgets"></mat-icon>
+      {{isLoading ? "Loading..." : "Send Reminders"}}
+    </button>
+  </div>

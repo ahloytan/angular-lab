@@ -127,6 +127,12 @@
     line-height: 1.4rem;
     letter-spacing: -0.00875rem;
     text-decoration: none;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+
+  .pill-text {
+    width: 5rem;
   }
 
   .pill:hover {
@@ -139,7 +145,9 @@
   .pill-group .pill:nth-child(6n + 2) {
     --pill-accent: var(--french-violet);
   }
-  .pill-group .pill:nth-child(6n + 3),
+  .pill-group .pill:nth-child(6n + 3) {
+    --pill-accent: var(--orange-red);
+  }
   .pill-group .pill:nth-child(6n + 4),
   .pill-group .pill:nth-child(6n + 5) {
     --pill-accent: var(--hot-red);
@@ -233,18 +241,6 @@
         <h1>Hello, Angular merchants</h1>
         <p>Congratulations! Your app is running. 🎉 Open up the developer tools and observe the console.logs~</p>
         <div class="button-holder">
-          <button mat-flat-button type="button" (click)="goToHome()">
-            <mat-icon aria-hidden="false" aria-label="home icon" fontIcon="home"></mat-icon>
-            Go to Home
-          </button>
-          <button mat-flat-button type="button" (click)="goToNewsTablePage()">
-            <mat-icon aria-hidden="false" aria-label="add note icon" fontIcon="table_chart"></mat-icon>
-            Go to News Table Page
-          </button>
-          <!-- <button mat-flat-button type="button" (click)="goToNewPage()">
-            <mat-icon aria-hidden="false" aria-label="add note icon" fontIcon="note_add"></mat-icon>
-            Go to New Page
-          </button> -->
           @if (_swUpdateService.hasUpdate) {
             <button mat-flat-button type="button" (click)="_swUpdateService.reloadSite()">
               <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="refresh"></mat-icon>
@@ -256,30 +252,11 @@
       <div class="divider" role="separator" aria-label="Divider"></div>
       <div class="right-side">
         <div class="pill-group">
-          @for (item of [
-            { title: 'Explore the Docs', link: 'https://angular.dev' },
-            { title: 'Learn with Tutorials', link: 'https://angular.dev/tutorials' },
-            { title: 'CLI Docs', link: 'https://angular.dev/tools/cli' },
-          ]; track item.title) {
-            <a
-              class="pill"
-              [href]="item.link"
-              target="_blank"
-              rel="noopener"
-            >
-              <span>{{ item.title }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="14"
-                viewBox="0 -960 960 960"
-                width="14"
-                fill="currentColor"
-              >
-                <path
-                  d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"
-                />
-              </svg>
-            </a>
+          @for (link of links; track link.title) {
+            <div class="pill" (click)="goToRoute(link.route)">
+              <mat-icon aria-hidden="false" aria-label="add note icon" [fontIcon]="link.icon"></mat-icon>
+              <span class="pill-text">{{ link.title }}</span>
+            </div>
           }
         </div>
         <div class="social-links">
@@ -359,4 +336,3 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-

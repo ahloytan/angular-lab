@@ -26,11 +26,11 @@ export class NewsTableComponent {
   }
 
   ngOnInit() {
-    this.getNews();
-    this.getNewsCached();
+    // this.getNews();
+    // this.getNewsCached();
   }
 
-  async getNews() {
+  async getNews(): Promise<any> {
     this.isLoading = true;
     const { data, error } = await this.supabaseService.getNews();
     if (error) {
@@ -42,7 +42,7 @@ export class NewsTableComponent {
     this.isLoading = false;
   }
 
-  async getNewsCached() {
+  async getNewsCached(): Promise<any> {
     this.isLoading = true;
     const { data, error } = await this.supabaseService.getNewsCached();
     if (error) {

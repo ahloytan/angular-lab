@@ -7,7 +7,7 @@ import {
   SupabaseClient,
   User,
 } from '@supabase/supabase-js'
-import { environment } from '../environments/environment'
+import { ENV } from '../environments/environment'
 
 export interface Profile {
   id?: string
@@ -24,7 +24,7 @@ export class SupabaseService {
   _session: AuthSession | null = null
 
   constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
+    this.supabase = createClient(ENV.supabaseUrl, ENV.supabaseKey)
   }
 
   get session() {
@@ -37,6 +37,13 @@ export class SupabaseService {
   async getNews() {
     return this.supabase
       .from('news')
+      .select()
+  }
+
+  async addNews(description: string) {
+    return this.supabase
+      .from('news')
+      .insert([{description}])
       .select()
   }
 

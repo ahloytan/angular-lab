@@ -1,7 +1,7 @@
 <a name="readme-top"></a>
-# New Angular Observable
+# Angular Lab
 
-[Angular CLI](https://github.com/angular/angular-cli) v18 | Unified state control source
+This is a research and testing ground for me to tinker with various Angular features. The aim is to contruct and implement efficient proof-of-concept that can be shared with anyone and everyone. Powered by [Angular CLI](https://github.com/angular/angular-cli)
 
 ## Sandbox
 https://codesandbox.io/p/github/ahloytan/angular-observables/master
@@ -36,23 +36,6 @@ https://codesandbox.io/p/github/ahloytan/angular-observables/master
 2. Feel free to contact me if there are issues or if there are opportunities that I can help you with!
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# Notes/Observations
-1. Main bulk of code located in `src/app/components/observable-form/observable-form.component.ts`
-2. Although `.events()` provides the source (formControl) that's emitting the value, it's name is always `FormControl2` even if 2 separate forms are created
-3. As an example, if you subscribe to `myForm`, which is the parent form group, and you change the value of `streetName`, the source doesn't tell you that the change comes from `streetName`. Instead, the source will be `FormControl2`
-4. Chaining `.events()` with `.pipe(debounceTime(x))` will only return the most recent notification. In order of emission (first to last): `StatusChangeEvent` --> `ValueChangedEvent` --> `TouchedChangedEvent`
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-# References
-1. https://dev.to/railsstudent/unified-control-state-change-events-working-with-reactive-form-is-never-the-same-in-angular-ipm
-2. https://github.com/angular/angular/issues/10887
-3. https://github.com/angular/angular/issues/42862
-4. https://medium.com/@chandantechie/angular-v18-unified-control-state-change-events-f4c99f7ba1f1
-5. https://medium.com/@pudalepramod/commonly-used-rxjs-features-with-reactive-forms-3e072b14a9f4
-6. https://www.angulararchitects.io/en/blog/whats-new-in-angular-18/
-7. https://www.angularspace.com/unified-control-state-change-events-in-angular-18/
-8. https://netbasal.com/unified-control-state-change-events-in-angular-7e83c0504c8b
-9. https://stackoverflow.com/questions/39142616/what-are-the-practical-differences-between-template-driven-and-reactive-forms
-10. https://stackoverflow.com/questions/56729248/how-to-get-formcontrolname-of-the-field-which-value-changed-in-angular-reactive
-11. https://stackoverflow.com/questions/60016114/angular-reactuve-form-control-valuechanges-get-value-changed-field-name-prev-v
+# Notes & Useful Links
+I have compiled all the useful notes, observations, and references in this [doc](https://docs.google.com/document/d/1kuLCCH6SVQFD8uOz3nnUn6rl0u9hVVCSqupcJk7sbTQ/edit?usp=sharing) for easy reference!
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
