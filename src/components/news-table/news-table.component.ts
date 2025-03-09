@@ -26,8 +26,8 @@ export class NewsTableComponent {
   }
 
   ngOnInit() {
-    // this.getNews();
-    // this.getNewsCached();
+    this.getNews();
+    this.getNewsCached();
   }
 
   async getNews(): Promise<any> {

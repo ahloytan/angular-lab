@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 .vercel
 /src/environments
+package-lock.json

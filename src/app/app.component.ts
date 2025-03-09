@@ -48,7 +48,7 @@ export class AppComponent {
     },
   ];
 
-
+  //https://jossef.github.io/material-design-icons-iconfont/
   constructor(
     private _router: Router,
     public _swUpdateService: SwUpdateService,

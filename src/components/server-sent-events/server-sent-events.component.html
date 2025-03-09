@@ -1,10 +1,28 @@
-<div id="userId">
+<div id="sse-container">
+  <div id="sender">
     <mat-form-field>
-      <mat-label>Enter a number</mat-label>
-      <input matInput type="number" [(ngModel)]="userId">
+      <mat-label>Enter Sender ID</mat-label>
+      <input matInput type="number" [(ngModel)]="senderUserId">
     </mat-form-field>
-    <button mat-flat-button (click)="sendReminder()" [disabled]="isLoading">
+    <button mat-flat-button (click)="openConnection()" [disabled]="eventSourceSubscription">
+      <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="play_circle"></mat-icon>
+      Open Connection
+    </button>
+  </div>
+
+  <div id="receiver">
+    <mat-form-field>
+      <mat-label>Enter Receiver User ID</mat-label>
+      <input matInput type="number" [formControl]="remindersForm.controls['receiverUserId']">
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label>Enter message</mat-label>
+      <textarea matInput placeholder="Leave a message" [formControl]="remindersForm.controls['message']"></textarea>
+    </mat-form-field>
+
+    <button mat-flat-button (click)="submitForm()" [disabled]="isLoading">
       <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="widgets"></mat-icon>
       {{isLoading ? "Loading..." : "Send Reminders"}}
     </button>
   </div>
+</div>
