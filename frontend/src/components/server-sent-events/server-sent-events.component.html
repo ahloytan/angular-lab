@@ -1,28 +1,63 @@
 <div id="sse-container">
-  <div id="sender">
-    <mat-form-field>
-      <mat-label>Enter Connector User ID</mat-label>
-      <input matInput type="number" [(ngModel)]="connectorUserId">
-    </mat-form-field>
-    <button mat-flat-button (click)="openConnection()" [disabled]="eventSourceSubscription">
-      <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="play_circle"></mat-icon>
-      Open Connection
-    </button>
+  <div id="sender-receiver">
+    <div id="sender">
+      <mat-form-field>
+        <mat-label>Enter Connector User ID</mat-label>
+        <input matInput type="number" [(ngModel)]="connectorUserId">
+      </mat-form-field>
+      <button mat-flat-button (click)="openConnection()" [disabled]="eventSourceSubscription">
+        <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="play_circle"></mat-icon>
+        Open Connection
+      </button>
+    </div>
+  
+    <div id="receiver">
+      <mat-form-field>
+        <mat-label>Enter Receiver User ID</mat-label>
+        <input matInput type="number" [formControl]="remindersForm.controls['receiverUserId']">
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <mat-label>Enter message</mat-label>
+        <textarea matInput placeholder="Leave a message" [formControl]="remindersForm.controls['message']"></textarea>
+      </mat-form-field>
+  
+      <button mat-flat-button (click)="submitForm()" [disabled]="isLoading">
+        <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="widgets"></mat-icon>
+        {{isLoading ? "Loading..." : "Send Reminders"}}
+      </button>
+    </div>
   </div>
 
-  <div id="receiver">
-    <mat-form-field>
-      <mat-label>Enter Receiver User ID</mat-label>
-      <input matInput type="number" [formControl]="remindersForm.controls['receiverUserId']">
-    </mat-form-field>
-    <mat-form-field class="example-full-width">
-      <mat-label>Enter message</mat-label>
-      <textarea matInput placeholder="Leave a message" [formControl]="remindersForm.controls['message']"></textarea>
-    </mat-form-field>
+  <div id="reminders-table">
+    <table mat-table [dataSource]="reminders" class="mat-elevation-z8">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let user"> {{ user.id }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="sender_user_id">
+        <th mat-header-cell *matHeaderCellDef> Sender ID </th>
+        <td mat-cell *matCellDef="let user"> {{ user.sender_user_id }} </td>
+      </ng-container>
 
-    <button mat-flat-button (click)="submitForm()" [disabled]="isLoading">
-      <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="widgets"></mat-icon>
-      {{isLoading ? "Loading..." : "Send Reminders"}}
-    </button>
+      <ng-container matColumnDef="message">
+        <th mat-header-cell *matHeaderCellDef> Message </th>
+        <td mat-cell *matCellDef="let user"> {{ user.message }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef> Created At </th>
+        <td mat-cell *matCellDef="let user"> {{ user.created_at }} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+          No reminders found for this user
+        </td>
+      </tr>
+    </table>
   </div>
 </div>

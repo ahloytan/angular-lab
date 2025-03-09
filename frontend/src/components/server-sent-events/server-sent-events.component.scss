@@ -2,10 +2,20 @@
 
 #sse-container {
     display: flex;
-    width: 100%;
-    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
     max-width: 700px;
     margin: 1rem auto;
+
+    @include respond(mobile) {
+        display: inherit;
+    }
+}
+
+#sender-receiver {
+    display: flex;
+    width: 100%;
+    justify-content: center;
     align-items: center;
     gap: 4rem;
 
@@ -21,4 +31,13 @@
     @include respond(mobile) {
         margin-bottom: 5rem;    
     }
+}
+
+#reminders-table {
+    overflow: auto;
+}
+
+.no-data {
+    text-align: center;
+    padding: 1rem 0;
 }

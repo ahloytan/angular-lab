@@ -7,19 +7,23 @@ import { MatInputModule } from '@angular/material/input';
 import { ServerSentEventsService } from './server-sent-events.service';
 import { EventSourceService } from '../../shared/event-source.service';
 import { BE_ENDPOINT } from '../../environments/environment';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-server-sent-events',
   standalone: true,
-  imports: [FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, ReactiveFormsModule],
+  imports: [FormsModule, MatButtonModule, MatFormFieldModule, MatTableModule, MatInputModule, MatIconModule, ReactiveFormsModule],
   templateUrl: './server-sent-events.component.html',
   styleUrl: './server-sent-events.component.scss'
 })
+
 export class ServerSentEventsComponent {
+  protected connectorUserId: number = 1;
+  protected displayedColumns: string[] = ['id', 'sender_user_id', 'message', 'created_at'];
   protected eventSourceSubscription: any;
   protected isLoading: boolean = false;
+  protected reminders: any = [];
   protected remindersForm: any;
-  protected connectorUserId: number = 1;
 
   constructor(
     private _sseService: ServerSentEventsService,
@@ -31,8 +35,12 @@ export class ServerSentEventsComponent {
       message: [null, [Validators.required]]
     });
   }
-
   
+  ngOnInit() {
+    
+    this.getReminders();
+  }
+
   submitForm(): void {
     if (this.remindersForm.invalid) {
       this.markAllControlsTouchedAndDirty(this.remindersForm);
@@ -63,11 +71,23 @@ export class ServerSentEventsComponent {
     .subscribe({
       next: data => {
           //handle event
-          console.log("CHOMIK OK", data);
+        console.log("Event Source Subscription OK", data);
       },
       error: error => {
           //handle error
-          console.log("CHOMIK NOT OK", error);
+        console.log("Event Source Subscription ERROR", error);
+      }
+    });
+  }
+
+  private getReminders(): void {
+    this._sseService.getReminders(this.connectorUserId).subscribe({
+      next: (data) => {
+        console.log(data)
+        if (data?.length) this.reminders = data; 
+      },
+      error: (err) => {
+        console.log(err);
       }
     });
   }

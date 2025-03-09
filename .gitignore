@@ -6,6 +6,7 @@ pnpm-debug.log*
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+.vercel/
 
 # Logs
 logs/
@@ -41,6 +42,7 @@ out/
 
 # Dependency directories for frontend and backend
 frontend/node_modules/
+frontend/src/environments
 backend/node_modules/
 
 # Next.js or Nuxt.js build artifacts (if applicable)

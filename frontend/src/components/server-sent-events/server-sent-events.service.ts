@@ -14,6 +14,10 @@ export class ServerSentEventsService {
   ) {
   }
 
+  getReminders(connectorUserId: number): Observable<any> {
+    return this._httpClient.get(`${BE_ENDPOINT}/reminders/user/${connectorUserId}`);
+  }
+
   sendReminders(data: any): Observable<any> {
     return this._httpClient.post(`${BE_ENDPOINT}/reminders`, data);
   }

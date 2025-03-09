@@ -37,7 +37,6 @@ export class EventSourceService {
 
        return new Observable((subscriber: Subscriber<Event>) => {
             this.eventSource.onerror = (error: any) => {
-                console.log("ERROR BRO", error)
                 this.zone.run(() => subscriber.error(error));
             };
 
