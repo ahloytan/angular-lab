@@ -23,12 +23,16 @@ https://codesandbox.io/p/github/ahloytan/angular-observables/master
 ![My Skills](https://skillicons.dev/icons?i=angular,ts&perline=3)
 
 ### Styling
-[SASS](https://sass-lang.com/), [SASS](https://www.w3schools.com/css/) <br>
+[SASS](https://sass-lang.com/), [CSS](https://www.w3schools.com/css/) <br>
 ![My Skills](https://skillicons.dev/icons?i=sass,css&perline=3)
 
+## Backend
+[Node.js](https://nodejs.org/en), [Express.js](https://expressjs.com/) <br>
+![My Skills](https://skillicons.dev/icons?i=nodejs,express&perline=3)
+
 ## Deployment
-[Vercel](https://vercel.com/)<br>
-![My Skills](https://skillicons.dev/icons?i=vercel&perline=3)
+[Vercel](https://vercel.com/), [Supabase](https://supabase.com/)<br>
+![My Skills](https://skillicons.dev/icons?i=vercel,supabase&perline=3)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 # Contact Me

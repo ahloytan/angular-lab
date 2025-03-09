@@ -83,7 +83,6 @@ export class ServerSentEventsComponent {
   private getReminders(): void {
     this._sseService.getReminders(this.connectorUserId).subscribe({
       next: (data) => {
-        console.log(data)
         if (data?.length) this.reminders = data; 
       },
       error: (err) => {
