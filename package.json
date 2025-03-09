@@ -1,0 +1,11 @@
+{
+    "name": "angular-lab",
+    "version": "1.0.0",
+    "description": "This is a research and testing ground for me to tinker with various Angular features",
+    "scripts": {
+        "install:frontend": "cd frontend && npm install",
+        "install:backend": "cd backend && npm install",
+        "start:frontend": "cd frontend && npm start",
+        "start:server": "cd backend && npm start"
+    }
+}
