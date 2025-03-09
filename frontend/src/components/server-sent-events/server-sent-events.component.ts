@@ -19,7 +19,7 @@ export class ServerSentEventsComponent {
   protected eventSourceSubscription: any;
   protected isLoading: boolean = false;
   protected remindersForm: any;
-  protected senderUserId: number = 1;
+  protected connectorUserId: number = 1;
 
   constructor(
     private _sseService: ServerSentEventsService,
@@ -46,16 +46,16 @@ export class ServerSentEventsComponent {
       return;
     }
 
-    this.sendReminder(this.senderUserId, receiverUserId, message);
+    this.sendReminder(this.connectorUserId, receiverUserId, message);
   }
 
   openConnection(): void {
-    if (this.senderUserId <= 0) {
+    if (this.connectorUserId <= 0) {
       alert("Please enter a sender user id greater than 0");
       return;
     }
 
-    let url = `${BE_ENDPOINT}/events?senderUserId=${this.senderUserId}`;
+    let url = `${BE_ENDPOINT}/events?connectorUserId=${this.connectorUserId}`;
     const options = { withCredentials: true };
     const eventNames = ['newEvent'];
 
