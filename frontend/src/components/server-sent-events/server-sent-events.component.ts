@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { BE_ENDPOINT } from '../../environments/environment';
+import { Component, inject } from '@angular/core';
+import { EventSourceService } from '../../shared/event-source.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { ServerSentEventsService } from './server-sent-events.service';
-import { EventSourceService } from '../../shared/event-source.service';
-import { BE_ENDPOINT } from '../../environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
+import { ServerSentEventsService } from './server-sent-events.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-server-sent-events',
@@ -18,6 +20,8 @@ import { MatTableModule } from '@angular/material/table';
 })
 
 export class ServerSentEventsComponent {
+  private _snackBar = inject(MatSnackBar);
+  
   protected connectorUserId: number = 1;
   protected displayedColumns: string[] = ['id', 'sender_user_id', 'message', 'created_at'];
   protected eventSourceSubscription: any;
@@ -37,12 +41,11 @@ export class ServerSentEventsComponent {
   }
   
   ngOnInit() {
-    
-    this.getReminders();
   }
 
   submitForm(): void {
     if (this.remindersForm.invalid) {
+      this.openSnackBar("Please fill up the necessary fields first!");
       this.markAllControlsTouchedAndDirty(this.remindersForm);
       return;
     }
@@ -50,7 +53,7 @@ export class ServerSentEventsComponent {
     const remindersFormRawValues = this.remindersForm.getRawValue();
     const { receiverUserId, message } = remindersFormRawValues;
     if (receiverUserId <= 0) {
-      alert("Please enter a sender user id greater than 0");
+      this.openSnackBar("Please enter a sender user id greater than 0");
       return;
     }
 
@@ -59,10 +62,11 @@ export class ServerSentEventsComponent {
 
   openConnection(): void {
     if (this.connectorUserId <= 0) {
-      alert("Please enter a sender user id greater than 0");
+      this.openSnackBar("Please enter a sender user id greater than 0");
       return;
     }
-
+    
+    this.getReminders();
     let url = `${BE_ENDPOINT}/events?connectorUserId=${this.connectorUserId}`;
     const options = { withCredentials: true };
     const eventNames = ['newEvent'];
@@ -72,6 +76,7 @@ export class ServerSentEventsComponent {
       next: data => {
           //handle event
         console.log("Event Source Subscription OK", data);
+        this.getReminders();
       },
       error: error => {
           //handle error
@@ -93,9 +98,16 @@ export class ServerSentEventsComponent {
 
   private async sendReminder(senderUserId: number, receiverUserId: number, message: string): Promise<any> {
     this.isLoading = true;
-    this._sseService.sendReminders({senderUserId, receiverUserId, message}).subscribe({
+
+    let snackbarMsg = 'Reminder sent';
+    this._sseService.sendReminders({senderUserId, receiverUserId, message})
+    .pipe(finalize(() => this.openSnackBar(snackbarMsg)))
+    .subscribe({
       next: (data) => console.log("OK", data),
-      error: (err) => console.log("ERROR", err)
+      error: (err) => {
+        snackbarMsg = 'Something went wrong, please contact admin @ahloysius'
+        console.log("ERROR", err);
+      }
     });
     
     this.isLoading = false;
@@ -109,6 +121,12 @@ export class ServerSentEventsComponent {
         control.markAsDirty();
         control.markAsTouched();
       }
+    });
+  }
+
+  private openSnackBar(message: string) {
+    this._snackBar.open(message, '', {
+      duration: 3000
     });
   }
   

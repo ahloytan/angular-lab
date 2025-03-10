@@ -29,7 +29,7 @@ app.get("/events", (req, res) => {
       event: 'INSERT', 
       schema: 'public', 
       table: 'reminders'
-    }, (payload) => {q
+    }, (payload) => {
 
       const eventData = {
         type: 'db-change',
