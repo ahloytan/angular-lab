@@ -28,6 +28,8 @@ export class ServerSentEventsComponent {
   protected isLoading: boolean = false;
   protected reminders: any = [];
   protected remindersForm: any;
+  protected lastSubmittedTimeStamp: number = 0;
+  protected lastOpenedConnectionTimeStamp: number = 0;
 
   constructor(
     private _sseService: ServerSentEventsService,
@@ -43,19 +45,31 @@ export class ServerSentEventsComponent {
   ngOnInit() {
   }
 
-  submitForm(): void {
+  onSendReminder(): void {
     if (this.remindersForm.invalid) {
       this.openSnackBar("Please fill up the necessary fields first!");
       this.markAllControlsTouchedAndDirty(this.remindersForm);
       return;
     }
 
-    const remindersFormRawValues = this.remindersForm.getRawValue();
-    const { receiverUserId, message } = remindersFormRawValues;
-    if (receiverUserId <= 0) {
+    if (this.connectorUserId <= 0) {
       this.openSnackBar("Please enter a sender user id greater than 0");
       return;
     }
+
+    const remindersFormRawValues = this.remindersForm.getRawValue();
+    const { receiverUserId, message } = remindersFormRawValues;
+    if (receiverUserId <= 0) {
+      this.openSnackBar("Please enter a receiver user id greater than 0");
+      return;
+    }
+
+    const isUserSpamming = this.isSpammed(2000);
+    if (isUserSpamming) {
+      this.openSnackBar("Chill leh don't spam, wait 2s");
+      return;
+    }
+    this.lastSubmittedTimeStamp = Date.now();
 
     this.sendReminder(this.connectorUserId, receiverUserId, message);
   }
@@ -65,24 +79,36 @@ export class ServerSentEventsComponent {
       this.openSnackBar("Please enter a sender user id greater than 0");
       return;
     }
+
+    const isUserSpamming = this.isSpammed(5000);
+    if (isUserSpamming) {
+      this.openSnackBar("Chill leh don't spam, wait 5s");
+      return;
+    }
+    this.lastOpenedConnectionTimeStamp = Date.now();
     
     this.getReminders();
-    let url = `${BE_ENDPOINT}/events?connectorUserId=${this.connectorUserId}`;
+    let url = `${BE_ENDPOINT}/open-stream/user/${this.connectorUserId}`;
     const options = { withCredentials: true };
-    const eventNames = ['newEvent'];
+    const eventNames = ['newMessageEvent'];
 
+    this.openSnackBar(`Successfully connected as user id ${this.connectorUserId}`);
     this.eventSourceSubscription = this.eventSourceService.connectToServerSentEvents(url, options, eventNames)
     .subscribe({
       next: data => {
-          //handle event
         console.log("Event Source Subscription OK", data);
         this.getReminders();
       },
       error: error => {
-          //handle error
-        console.log("Event Source Subscription ERROR", error);
+        console.log("Vercel API timeout limit of 30s has been reached. Will proceed to reconnect now!", error);
       }
     });
+  }
+
+  closeConnection(): void {
+    this.ngOnDestroy();
+    this.eventSourceSubscription = null;
+    this.openSnackBar(`Successfully closed connection as user id ${this.connectorUserId}`);
   }
 
   private getReminders(): void {
@@ -105,7 +131,7 @@ export class ServerSentEventsComponent {
     .subscribe({
       next: (data) => console.log("OK", data),
       error: (err) => {
-        snackbarMsg = 'Something went wrong, please contact admin @ahloysius'
+        snackbarMsg = 'Something went wrong, please contact admin @ahloysius via Telegram'
         console.log("ERROR", err);
       }
     });
@@ -128,6 +154,10 @@ export class ServerSentEventsComponent {
     this._snackBar.open(message, '', {
       duration: 3000
     });
+  }
+
+  private isSpammed(limit: number): boolean {
+    return (Date.now() - this.lastOpenedConnectionTimeStamp) < limit
   }
   
   ngOnDestroy() {

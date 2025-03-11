@@ -3,12 +3,21 @@
     <div id="sender">
       <mat-form-field>
         <mat-label>Enter Connector User ID</mat-label>
-        <input matInput type="number" [(ngModel)]="connectorUserId">
+        <input matInput type="number" [(ngModel)]="connectorUserId" [disabled]="eventSourceSubscription">
       </mat-form-field>
-      <button mat-flat-button (click)="openConnection()" [disabled]="eventSourceSubscription">
-        <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="play_circle"></mat-icon>
-        Open Connection
-      </button>
+      @if (eventSourceSubscription) {
+        <button mat-flat-button (click)="closeConnection()" id="close-connection">
+          <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="close"></mat-icon>
+          Close Connection
+        </button>
+
+      } @else {
+        <button mat-flat-button (click)="openConnection()">
+          <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="play_circle"></mat-icon>
+          Open Connection
+        </button>
+  
+      }
     </div>
   
     <div id="receiver">
@@ -21,8 +30,8 @@
         <textarea matInput placeholder="Leave a message" [formControl]="remindersForm.controls['message']"></textarea>
       </mat-form-field>
   
-      <button mat-flat-button (click)="submitForm()" [disabled]="isLoading">
-        <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="widgets"></mat-icon>
+      <button mat-flat-button (click)="onSendReminder()" [disabled]="isLoading">
+        <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="send"></mat-icon>
         {{isLoading ? "Loading..." : "Send Reminders"}}
       </button>
     </div>

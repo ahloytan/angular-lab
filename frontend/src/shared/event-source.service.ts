@@ -1,9 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Observable, Subscriber } from 'rxjs';
 
-/**
-* Server-Sent Events service
-*/
 @Injectable({
    providedIn: 'root'
 })
@@ -36,17 +33,13 @@ export class EventSourceService {
        this.eventSource = this.getEventSource(url, options);
 
        return new Observable((subscriber: Subscriber<Event>) => {
-            this.eventSource.onerror = (error: any) => {
-                this.zone.run(() => subscriber.error(error));
-            };
-
-            this.eventSource.onmessage = (event: MessageEvent) => {
-                console.log("MESSAGE RECEIVED", event);
-            };
+            this.eventSource.onerror = (error: any) => this.zone.run(() => subscriber.error(error));
+        
+            this.eventSource.onmessage = (event: MessageEvent) => console.log("MESSAGE RECEIVED", event);
 
             this.eventSource.addEventListener('open', () => console.log("SSE connection established"));
-            this.eventSource.addEventListener('error', (err: any) =>  console.log(`${err.eventPhase === EventSource.CLOSED ? "SSE connection closed" : "Error: " + err}`));
-
+            this.eventSource.addEventListener('error', (err: any) => console.log(`${err.eventPhase === EventSource.CLOSED ? "SSE connection closed" : "Error: " + err}`));
+            
             eventNames.forEach((event: string) => {
                 this.eventSource.addEventListener(event, (data: any) => {
                     this.zone.run(() => subscriber.next(data));
@@ -55,10 +48,6 @@ export class EventSourceService {
        });
    }
 
-
-   /**
-    * Method for closing the connection
-    */
    close(): void {
        if (!this.eventSource) {
            return;
