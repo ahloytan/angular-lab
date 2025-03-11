@@ -39,8 +39,6 @@ router.get("/user/:connectorUserId", (req, res) => {
         res.write(`data: ${JSON.stringify(eventData)}\n\n`);
         res.write(`data: you have received a message successfully! good\n\n`);
       }
-      
-
     })
     .subscribe((status) => {
       console.log(`Supabase realtime status for client ${connectorUserId}: ${status}`);
@@ -50,7 +48,7 @@ router.get("/user/:connectorUserId", (req, res) => {
 
     const countdown = setTimeout(() => {
       res.end();
-    }, 28000)
+    }, 29000);
 
     res.on('close', () => {
       console.log(`Client disconnected: ${connectorUserId}`);

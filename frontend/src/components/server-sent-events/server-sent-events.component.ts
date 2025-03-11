@@ -1,7 +1,7 @@
 import { BE_ENDPOINT } from '../../environments/environment';
 import { Component, inject } from '@angular/core';
 import { EventSourceService } from '../../shared/event-source.service';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControlOptions, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,10 +26,10 @@ export class ServerSentEventsComponent {
   protected displayedColumns: string[] = ['id', 'sender_user_id', 'message', 'created_at'];
   protected eventSourceSubscription: any;
   protected isLoading: boolean = false;
+  protected lastOpenedConnectionTime: number = 0;
+  protected lastSubmittedTime: number = 0;
   protected reminders: any = [];
   protected remindersForm: any;
-  protected lastSubmittedTimeStamp: number = 0;
-  protected lastOpenedConnectionTimeStamp: number = 0;
 
   constructor(
     private _sseService: ServerSentEventsService,
@@ -37,41 +37,26 @@ export class ServerSentEventsComponent {
     private _fb: FormBuilder
   ) {
     this.remindersForm = this._fb.group({
-      receiverUserId: [null, [Validators.required]],
+      receiverUserId: [null, [Validators.required, Validators.min(1)]],
       message: [null, [Validators.required]]
-    });
+    }, { validators: this.parentValidator } as AbstractControlOptions);
   }
   
-  ngOnInit() {
-  }
-
   onSendReminder(): void {
     if (this.remindersForm.invalid) {
-      this.openSnackBar("Please fill up the necessary fields first!");
+      this.checkError();
       this.markAllControlsTouchedAndDirty(this.remindersForm);
       return;
     }
 
-    if (this.connectorUserId <= 0) {
-      this.openSnackBar("Please enter a sender user id greater than 0");
-      return;
-    }
-
-    const remindersFormRawValues = this.remindersForm.getRawValue();
-    const { receiverUserId, message } = remindersFormRawValues;
-    if (receiverUserId <= 0) {
-      this.openSnackBar("Please enter a receiver user id greater than 0");
-      return;
-    }
-
-    const isUserSpamming = this.isSpammed(2000);
+    const isUserSpamming = this.isSpammed(this.lastSubmittedTime, 2500);
     if (isUserSpamming) {
-      this.openSnackBar("Chill leh don't spam, wait 2s");
+      this.openSnackBar("Chill leh don't spam, wait 2.5s");
       return;
     }
-    this.lastSubmittedTimeStamp = Date.now();
+    this.lastSubmittedTime = Date.now();
 
-    this.sendReminder(this.connectorUserId, receiverUserId, message);
+    this.sendReminder();
   }
 
   openConnection(): void {
@@ -80,12 +65,12 @@ export class ServerSentEventsComponent {
       return;
     }
 
-    const isUserSpamming = this.isSpammed(5000);
+    const isUserSpamming = this.isSpammed(this.lastOpenedConnectionTime, 5000);
     if (isUserSpamming) {
       this.openSnackBar("Chill leh don't spam, wait 5s");
       return;
     }
-    this.lastOpenedConnectionTimeStamp = Date.now();
+    this.lastOpenedConnectionTime = Date.now();
     
     this.getReminders();
     let url = `${BE_ENDPOINT}/open-stream/user/${this.connectorUserId}`;
@@ -100,7 +85,6 @@ export class ServerSentEventsComponent {
         this.getReminders();
       },
       error: error => {
-        console.log("Vercel API timeout limit of 30s has been reached. Will proceed to reconnect now!", error);
       }
     });
   }
@@ -122,11 +106,13 @@ export class ServerSentEventsComponent {
     });
   }
 
-  private async sendReminder(senderUserId: number, receiverUserId: number, message: string): Promise<any> {
+  private async sendReminder(): Promise<any> {
+    const remindersFormRawValues = this.remindersForm.getRawValue();
+    const { receiverUserId, message } = remindersFormRawValues;
     this.isLoading = true;
 
     let snackbarMsg = 'Reminder sent';
-    this._sseService.sendReminders({senderUserId, receiverUserId, message})
+    this._sseService.sendReminders({senderUserId: this.connectorUserId, receiverUserId, message})
     .pipe(finalize(() => this.openSnackBar(snackbarMsg)))
     .subscribe({
       next: (data) => console.log("OK", data),
@@ -156,10 +142,31 @@ export class ServerSentEventsComponent {
     });
   }
 
-  private isSpammed(limit: number): boolean {
-    return (Date.now() - this.lastOpenedConnectionTimeStamp) < limit
+  private isSpammed(field: any, milliseconds: number): boolean {
+    return (Date.now() - field) < milliseconds;
+  }
+
+  private checkError(): void {
+    if (this.remindersForm.hasError('required')) {
+      this.openSnackBar("Please fill up the necessary fields first!");
+      return;
+    } 
+    
+    if (this.remindersForm.get('receiverUserId').hasError('min')) {
+      this.openSnackBar("Please enter a sender user id greater than 0");
+      return;
+    }
   }
   
+  private parentValidator(formGroup: FormGroup) {
+    const field1 = formGroup.get('receiverUserId')?.value;
+    const field2 = formGroup.get('message')?.value;
+  
+    if (!field1 || !field2) return { required: true };
+    
+    return null;
+  }
+
   ngOnDestroy() {
     this.eventSourceSubscription?.unsubscribe();
     this.eventSourceService.close();

@@ -14,8 +14,7 @@ router.post('/', async (req, res) => {
         .insert([{ 
           message, 
           sender_user_id: senderUserId,
-          receiver_user_id: receiverUserId,
-          created_at: new Date()
+          receiver_user_id: receiverUserId
         }]);
   
       if (error) throw error;
@@ -35,7 +34,9 @@ router.get('/user/:userId', async (req, res) => {
         const { data, error } = await supabase
             .from('reminders')
             .select('id, message, sender_user_id, created_at')
-            .eq('receiver_user_id', userId);
+            .eq('receiver_user_id', userId)
+            .order('created_at', { ascending: false })
+            .limit(10);
 
         if (error) {
             return res.status(400).json({ message: 'Error fetching reminders', error });
