@@ -15,7 +15,8 @@ router.post('/', async (req, res) => {
           message, 
           sender_user_id: senderUserId,
           receiver_user_id: receiverUserId
-        }]);
+        }])
+        .select();
   
       if (error) throw error;
   

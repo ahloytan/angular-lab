@@ -37,11 +37,15 @@ export class ServerSentEventsComponent {
     private _fb: FormBuilder
   ) {
     this.remindersForm = this._fb.group({
-      receiverUserId: [null, [Validators.required, Validators.min(1)]],
+      receiverUserId: [1, [Validators.required, Validators.min(1)]],
       message: [null, [Validators.required]]
     }, { validators: this.parentValidator } as AbstractControlOptions);
   }
   
+  ngOnInit() {
+    this.connectorUserId = Math.floor(Math.random() * 9999) + 1;
+  }
+
   onSendReminder(): void {
     if (this.remindersForm.invalid) {
       this.checkError();
@@ -71,17 +75,21 @@ export class ServerSentEventsComponent {
       return;
     }
     this.lastOpenedConnectionTime = Date.now();
-    
-    this.getReminders();
+
     let url = `${BE_ENDPOINT}/open-stream/user/${this.connectorUserId}`;
     const options = { withCredentials: true };
-    const eventNames = ['newMessageEvent'];
+    const eventNames = ['NEW_MESSAGE_EVENT', 'OPEN_STREAM_EVENT'];
 
     this.openSnackBar(`Successfully connected as user id ${this.connectorUserId}`);
     this.eventSourceSubscription = this.eventSourceService.connectToServerSentEvents(url, options, eventNames)
     .subscribe({
-      next: data => {
-        console.log("Event Source Subscription OK", data);
+      next: (data) => {
+        if (!data) {
+          console.log("NO DATA FROM EVENT STREAM");
+          return;
+        }
+
+        this.eventNamesLogger(data.type);
         this.getReminders();
       },
       error: error => {
@@ -93,6 +101,15 @@ export class ServerSentEventsComponent {
     this.ngOnDestroy();
     this.eventSourceSubscription = null;
     this.openSnackBar(`Successfully closed connection as user id ${this.connectorUserId}`);
+  }
+
+  private eventNamesLogger(eventName: string) {
+    if (eventName === "OPEN_STREAM_EVENT") {
+      console.log("Event source subscription - OPEN_STREAM_EVENT");
+      return;
+    }
+
+    console.log("Event source subscription - NEW_MESSAGE_EVENT");
   }
 
   private getReminders(): void {

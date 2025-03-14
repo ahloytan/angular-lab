@@ -16,7 +16,9 @@ router.get("/user/:connectorUserId", (req, res) => {
     res.setHeader('Content-Encoding', 'none')
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
-    // res.write(`event: open\n`);
+    res.write(`event: OPEN_STREAM_EVENT\n`);
+    res.write(`data: success\n\n`);
+    res.write(`: this is a comment!!!\n\n`);
 
   const channel = supabase
     .channel('schema-db-changes')
@@ -35,9 +37,10 @@ router.get("/user/:connectorUserId", (req, res) => {
       
       if (connectorUserId === payload.new.receiver_user_id) {
         res.write(`id: ${connectorUserId}\n`);
-        res.write(`event: newMessageEvent\n`);
+        res.write(`event: NEW_MESSAGE_EVENT\n`);
         res.write(`data: ${JSON.stringify(eventData)}\n\n`);
         res.write(`data: you have received a message successfully! good\n\n`);
+        res.write(`data: ${payload.new.data.message}`)
       }
     })
     .subscribe((status) => {
@@ -46,6 +49,7 @@ router.get("/user/:connectorUserId", (req, res) => {
       if (status === 'CHANNEL_ERROR') res.write(`data: ${JSON.stringify({ type: 'error', message: 'Channel error' })}\n\n`);
     });
 
+    //Timeout set to 29s because vercel api timeout limit is at 30s. Ending the request gracefully/prematurely will provide a positive visual feedback
     const countdown = setTimeout(() => {
       res.end();
     }, 29000);

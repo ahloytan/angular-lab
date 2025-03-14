@@ -41,8 +41,8 @@ export class EventSourceService {
     this.url = url;
     this.options = options;
     return new Observable((subscriber: Subscriber<Event>) => {
-    this.subscriber = subscriber;
-        this.createSseEventSource();
+      this.subscriber = subscriber;
+      this.createSseEventSource();
     });
   }
 
