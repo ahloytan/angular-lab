@@ -1,12 +1,11 @@
 'use strict';
+import express from 'express';
+import reminders from './reminders.js';
+import stream from './stream.js';
 
-const express = require('express');
 const router = express.Router();
-
-const reminders = require('./reminders');
-const stream = require('./stream');
 
 router.use('/reminders', reminders);
 router.use('/open-stream', stream);
 
-module.exports = router;
+export default router;

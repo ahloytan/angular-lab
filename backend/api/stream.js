@@ -1,9 +1,9 @@
 'use strict';
 
-const express = require('express');
-const router = express.Router();
+import express from 'express';
+import supabase from '../util/create-supabase.js';
 
-const { supabase } = require('../util/create-supabase');
+const router = express.Router();
 
 router.get("/user/:connectorUserId", (req, res) => {
     const connectorUserId = parseInt(req.params.connectorUserId);
@@ -35,7 +35,6 @@ router.get("/user/:connectorUserId", (req, res) => {
       //   data: payload.new
       // };
       
-      console.log(payload.new);
       if (connectorUserId === payload.new.receiver_user_id) {
         res.write(`id: ${connectorUserId}\n`);
         res.write(`event: NEW_MESSAGE_EVENT\n`);
@@ -62,4 +61,4 @@ router.get("/user/:connectorUserId", (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

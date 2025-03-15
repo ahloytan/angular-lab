@@ -1,9 +1,10 @@
 'use strict';
 
-const express = require('express');
+import express from 'express';
+import supabase from '../util/create-supabase.js';
+
 const router = express.Router();
 
-const { supabase } = require('../util/create-supabase');
 
 router.post('/', async (req, res) => {
     try {
@@ -55,4 +56,4 @@ router.get('/user/:userId', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
