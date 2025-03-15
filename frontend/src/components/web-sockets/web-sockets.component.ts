@@ -1,24 +1,97 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { WebSocketService } from '../../shared/web-sockets.service';
-import { MatButtonModule } from '@angular/material/button';
 import { BE_ENDPOINT_WS } from '../../environments/environment';
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { ConnectionStatus, WebSocketMessage, WebSocketService } from '../../shared/web-sockets.service';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-web-sockets',
   templateUrl: './web-sockets.component.html',
   styleUrl: './web-sockets.component.scss',
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule, ReactiveFormsModule],
   standalone: true
 })
 export class WebSocketsComponent {
+  readonly ConnectionStatus = ConnectionStatus;
+  protected connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED;
+  protected messageLog: Array<{
+    direction: 'incoming' | 'outgoing';
+    timestamp: Date;
+    message: WebSocketMessage;
+  }> = [];
+  protected messageForm: any;
 
-  constructor(private wsService: WebSocketService) {
+  private _snackBar = inject(MatSnackBar);
+  private statusSubscription: Subscription | null = null;
+  private messagesSubscription: Subscription | null = null;
 
+  constructor(
+    private wsService: WebSocketService, 
+    private _fb: FormBuilder
+  ) {
+    this.messageForm = this._fb.group({
+      name: [null, []],
+      message: [null, []]
+    })      
+  }
+
+  ngOnInit() {
+    this.statusSubscription = this.wsService.status$.subscribe(status => {
+      this.connectionStatus = status;
+    });
+
+    this.messagesSubscription = this.wsService.messages$.subscribe(message => {
+      this.logMessage('incoming', message);
+    });
   }
 
   openWebSocket(): void {    
     this.wsService.connect(BE_ENDPOINT_WS);
+    this.openSnackBar("Web socket successfully opened!");
+  }
+
+  disconnect(): void {
+    this.wsService.disconnect();
+  }
+
+  sendMessage(): void {
+    if (this.messageForm.invalid) return;
+
+    const messageFormRawValues = this.messageForm.getRawValue();
+    this.wsService.send({type: 'broadcast', ...messageFormRawValues});
+    // this.logMessage('outgoing', messageFormRawValues);
+  }
+
+  private openSnackBar(message: string) {
+    this._snackBar.open(message, '', {
+      duration: 3000
+    });
+  }
+
+  private logMessage(direction: 'incoming' | 'outgoing', message: WebSocketMessage): void {
+
+    this.messageLog.unshift({
+      direction,
+      timestamp: new Date(),
+      message
+    });
+    
+    // Limit log size to prevent memory issues
+    if (this.messageLog.length > 100) {
+      this.messageLog.pop();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.disconnect();
+    
+    this.statusSubscription?.unsubscribe();
+    this.messagesSubscription?.unsubscribe();
   }
 }

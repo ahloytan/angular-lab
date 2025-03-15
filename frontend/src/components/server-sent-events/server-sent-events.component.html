@@ -8,13 +8,13 @@
       @if (eventSourceSubscription) {
         <button mat-flat-button (click)="closeConnection()" id="close-connection">
           <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="close"></mat-icon>
-          Close Connection
+          Close SSE Connection
         </button>
 
       } @else {
         <button mat-flat-button (click)="openConnection()">
           <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="play_circle"></mat-icon>
-          Open Connection
+          Open SSE Connection
         </button>
   
       }

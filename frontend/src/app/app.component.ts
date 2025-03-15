@@ -39,12 +39,12 @@ export class AppComponent {
     {
       title: 'Server Sent Events',
       route: routesName.SSE,
-      icon: 'note_add'
+      icon: 'event'
     },
     {
       title: 'Web Sockets',
       route: routesName.WS,
-      icon: 'note_add'
+      icon: 'web'
     },
   ];
 
