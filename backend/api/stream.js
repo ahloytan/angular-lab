@@ -28,19 +28,20 @@ router.get("/user/:connectorUserId", (req, res) => {
       table: 'reminders'
     }, (payload) => {
 
-      const eventData = {
-        type: 'db-change',
-        table: 'reminders',
-        operation: payload.eventType,
-        data: payload.new
-      };
+      // const eventData = {
+      //   type: 'db-change',
+      //   table: 'reminders',
+      //   operation: payload.eventType,
+      //   data: payload.new
+      // };
       
+      console.log(payload.new);
       if (connectorUserId === payload.new.receiver_user_id) {
         res.write(`id: ${connectorUserId}\n`);
         res.write(`event: NEW_MESSAGE_EVENT\n`);
-        res.write(`data: ${JSON.stringify(eventData)}\n\n`);
+        res.write(`data: ${JSON.stringify(payload.new)}\n\n`);
         res.write(`data: you have received a message successfully! good\n\n`);
-        res.write(`data: ${payload.new.data.message}`)
+        // res.write(`data: ${payload.new.message}`);
       }
     })
     .subscribe((status) => {

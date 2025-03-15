@@ -76,6 +76,7 @@ export class ServerSentEventsComponent {
     }
     this.lastOpenedConnectionTime = Date.now();
 
+    this.getReminders();
     let url = `${BE_ENDPOINT}/open-stream/user/${this.connectorUserId}`;
     const options = { withCredentials: true };
     const eventNames = ['NEW_MESSAGE_EVENT', 'OPEN_STREAM_EVENT'];
@@ -83,14 +84,17 @@ export class ServerSentEventsComponent {
     this.openSnackBar(`Successfully connected as user id ${this.connectorUserId}`);
     this.eventSourceSubscription = this.eventSourceService.connectToServerSentEvents(url, options, eventNames)
     .subscribe({
-      next: (data) => {
+      next: (data: any) => {
         if (!data) {
           console.log("NO DATA FROM EVENT STREAM");
           return;
         }
 
         this.eventNamesLogger(data.type);
-        this.getReminders();
+        if (data.type === 'NEW_MESSAGE_EVENT') {
+          const reminder = JSON.parse(data.data);
+          this.reminders = [reminder, ...this.reminders];
+        }
       },
       error: error => {
       }
