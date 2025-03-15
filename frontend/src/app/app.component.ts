@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterOutlet } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 // import { SwUpdateService } from '../shared/service-worker.service';
-import { MyNewPageComponent } from '../components/my-new-page/my-new-page.component';
+import { WebSocketsComponent } from '../components/web-sockets/web-sockets.component';
 import { ObservableFormComponent } from '../components/observable-form/observable-form.component';
 import { routesName } from './app.routes';
 
@@ -14,7 +14,7 @@ import { routesName } from './app.routes';
   imports: [
     MatButtonModule, 
     MatIconModule, 
-    MyNewPageComponent,
+    WebSocketsComponent,
     ObservableFormComponent, 
     RouterOutlet, 
     ServiceWorkerModule 
@@ -42,8 +42,8 @@ export class AppComponent {
       icon: 'note_add'
     },
     {
-      title: 'New Page',
-      route: routesName.NEW_PAGE,
+      title: 'Web Sockets',
+      route: routesName.WS,
       icon: 'note_add'
     },
   ];
