@@ -2,7 +2,7 @@ import { BE_ENDPOINT_WS } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ConnectionStatus, WebSocketMessage, WebSocketService } from '../../shared/web-sockets.service';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +26,7 @@ export class WebSocketsComponent {
     message: WebSocketMessage;
   }> = [];
   protected messageForm: any;
+  protected lastSubmittedTime: number = 0;
 
   private _snackBar = inject(MatSnackBar);
   private statusSubscription: Subscription | null = null;
@@ -36,8 +37,8 @@ export class WebSocketsComponent {
     private _fb: FormBuilder
   ) {
     this.messageForm = this._fb.group({
-      name: [null, []],
-      message: [null, []]
+      name: [null, [Validators.required]],
+      message: [null, [Validators.required]]
     })      
   }
 
@@ -52,6 +53,11 @@ export class WebSocketsComponent {
   }
 
   openWebSocket(): void {    
+    if (this.messageForm.get('name').hasError('required')) {
+      this.openSnackBar("Please fill up name first!");
+      return;
+    } 
+
     this.wsService.connect(BE_ENDPOINT_WS);
     this.openSnackBar("Web socket successfully opened!");
   }
@@ -61,7 +67,17 @@ export class WebSocketsComponent {
   }
 
   sendMessage(): void {
-    if (this.messageForm.invalid) return;
+    if (this.messageForm.invalid) {
+      this.openSnackBar("Please enter a message!");
+      return;
+    }
+
+    const isUserSpamming = this.isSpammed(this.lastSubmittedTime, 2500);
+    if (isUserSpamming) {
+      this.openSnackBar("Chill leh don't spam, wait 2.5s");
+      return;
+    }
+    this.lastSubmittedTime = Date.now();
 
     const messageFormRawValues = this.messageForm.getRawValue();
     this.wsService.send({type: 'broadcast', ...messageFormRawValues});
@@ -75,7 +91,7 @@ export class WebSocketsComponent {
   }
 
   private logMessage(direction: 'incoming' | 'outgoing', message: WebSocketMessage): void {
-
+    console.log(message);
     this.messageLog.unshift({
       direction,
       timestamp: new Date(),
@@ -86,6 +102,10 @@ export class WebSocketsComponent {
     if (this.messageLog.length > 100) {
       this.messageLog.pop();
     }
+  }
+
+  private isSpammed(field: any, milliseconds: number): boolean {
+    return (Date.now() - field) < milliseconds;
   }
 
   ngOnDestroy(): void {

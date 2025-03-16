@@ -20,22 +20,26 @@
     
     } @else {
       <div class="text-center">
-        <mat-form-field>
-          <mat-label>Enter Username</mat-label>
-          <input matInput type="text"  [formControl]="messageForm.controls['name']">
-        </mat-form-field>
-      </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Enter Username</mat-label>
+            <input matInput type="text"  [formControl]="messageForm.controls['name']">
+          </mat-form-field>
+        </div>
 
-      <button mat-flat-button (click)="openWebSocket()">
-        <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="play_circle"></mat-icon>
-        Open Web Socket Connection
-      </button>
+        <div>
+          <button mat-flat-button (click)="openWebSocket()">
+            <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="play_circle"></mat-icon>
+            Open Web Socket Connection
+          </button>
+        </div>
+      </div>
     }
   </div>
 
   
   <div class="message-log chat-container">
-    <h3 class="text-center">Chat Room</h3>
+    <h3 class="text-center">Lobby</h3>
     <div class="log-container">
       <div *ngFor="let msg of messageLog" class="message" [ngClass]="msg.direction">
         <div class="message-header">
@@ -43,7 +47,12 @@
           <span class="direction">{{ msg.direction === 'outgoing' ? 'Sent' : 'Received' }}</span>
           <span class="type">{{ msg.message.type }}</span>
         </div>
-        <pre class="message-content">{{ msg.message.payload | json }}</pre>
+        <!-- <pre class="message-content">{{ msg.message.payload | json }}</pre> -->
+        @if (msg.message.payload?.name) {
+          <pre class="message-content"><b>{{ msg.message.payload.name }}: </b>{{ msg.message.payload.message }}</pre>
+        } @else {
+          <pre class="message-content">{{ msg.message.payload.message }}</pre>
+        }
       </div>
     </div>
   </div>

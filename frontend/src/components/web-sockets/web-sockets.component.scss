@@ -31,90 +31,100 @@
 }
 
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
   
-  .status-bar {
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    text-align: center;
-    font-weight: bold;
+.status-bar {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.connecting { background-color: #fff3cd; }
+.connected { background-color: #d4edda; }
+.disconnected { background-color: #f8d7da; }
+
+.connection-controls {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.message-log {
+  margin-top: 30px;
+}
+
+.log-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  background: #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.incoming {
+  background-color: #e9ecef;
+}
+
+.outgoing {
+  background-color: #e3f2fd;
+}
+
+.message-header {
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+  display: flex;
+  gap: 10px;
+}
+
+.message-content {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.table-title {
+  background-color: white;
+  border-radius: 10px;
+  padding: 5px;
+
+  @include respond(mobile) {
+      font-size: 0.8rem; 
   }
-  
-  .connecting { background-color: #fff3cd; }
-  .connected { background-color: #d4edda; }
-  .disconnected { background-color: #f8d7da; }
-  
-  .connection-controls {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 10px;
-  }
-  
-  button {
-    padding: 8px 15px;
-    cursor: pointer;
-  }
-  
-  button:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input, select, textarea {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-  }
-  
-  .message-log {
-    margin-top: 30px;
-  }
-  
-  .log-container {
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    background: #ccc;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  
-  .message {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 4px;
-  }
-  
-  .incoming {
-    background-color: #e9ecef;
-  }
-  
-  .outgoing {
-    background-color: #e3f2fd;
-  }
-  
-  .message-header {
-    margin-bottom: 5px;
-    font-size: 0.8rem;
-    display: flex;
-    gap: 10px;
-  }
-  
-  .message-content {
-    margin: 0;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
+}
