@@ -91,7 +91,6 @@ export class WebSocketsComponent {
   }
 
   private logMessage(direction: 'incoming' | 'outgoing', message: WebSocketMessage): void {
-    console.log(message);
     this.messageLog.unshift({
       direction,
       timestamp: new Date(),

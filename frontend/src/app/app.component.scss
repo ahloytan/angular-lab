@@ -1,9 +1,23 @@
 @import '../mixins';
 
+#footer {
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+
 .main {
     background-image: url("/assets/swiss.jpg");
     background-position: center;
     background-size: cover;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.rendered-content {
+  flex: 1;
 }
 
 .button-holder {
