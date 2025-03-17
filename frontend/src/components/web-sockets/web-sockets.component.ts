@@ -59,7 +59,7 @@ export class WebSocketsComponent {
     } 
 
     this.wsService.connect(BE_ENDPOINT_WS);
-    this.openSnackBar("Web socket successfully opened!");
+    this.openSnackBar("Establishing web socket connection...");
   }
 
   disconnect(): void {
