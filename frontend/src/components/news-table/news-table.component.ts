@@ -3,7 +3,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import { SupabaseService } from '../../shared/supabase.service';
+import { NewsTableService } from './news-table.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-news-table',
@@ -21,7 +22,7 @@ export class NewsTableComponent {
   newsCached: any = [];
 
   constructor(
-    public readonly supabaseService: SupabaseService
+    public readonly _newsTableService: NewsTableService
   ) {
   }
 
@@ -32,25 +33,29 @@ export class NewsTableComponent {
 
   async getNews(): Promise<any> {
     this.isLoading = true;
-    const { data, error } = await this.supabaseService.getNews();
-    if (error) {
-      console.error('Error fetching news:', error);
-    } else {
-      this.news = data;
-    }
-    
-    this.isLoading = false;
+    this._newsTableService.getNews()
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (data) => {
+          this.news = data;
+        },
+        error: (err) => {
+          console.error('Error fetching news:', err);
+        }
+      })
   }
 
   async getNewsCached(): Promise<any> {
     this.isLoading = true;
-    const { data, error } = await this.supabaseService.getNewsCached();
-    if (error) {
-      console.error('Error fetching news:', error);
-    } else {
-      this.newsCached = data;
-    }
-    
-    this.isLoading = false;
+    this._newsTableService.getNewsCached()
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (data) => {
+          this.newsCached = data;
+        },
+        error: (err) => {
+          console.error('Error fetching news:', err);
+        }
+      })
   }
 }

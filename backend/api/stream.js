@@ -16,7 +16,7 @@ router.get("/user/:connectorUserId", (req, res) => {
     res.setHeader('Content-Encoding', 'none')
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
-    res.write(`event: OPEN_STREAM_EVENT\n`);
+    res.write(`event: OPEN_STREAM_EVENT\n\n`);
     res.write(`data: success\n\n`);
     res.write(`: this is a comment!!!\n\n`);
 
