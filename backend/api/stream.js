@@ -16,7 +16,7 @@ router.get("/user/:connectorUserId", (req, res) => {
     res.setHeader('Content-Encoding', 'none')
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
-    res.write(`event: OPEN_STREAM_EVENT\n\n`);
+    res.write(`event: OPEN_STREAM_EVENT\n`);
     res.write(`data: success\n\n`);
     res.write(`: this is a comment!!!\n\n`);
 
@@ -36,6 +36,7 @@ router.get("/user/:connectorUserId", (req, res) => {
       // };
       
       if (connectorUserId === payload.new.receiver_user_id) {
+        console.log(`Incoming message to ${connectorUserId}: ${JSON.stringify(payload.new)}`);
         res.write(`id: ${connectorUserId}\n`);
         res.write(`event: NEW_MESSAGE_EVENT\n`);
         res.write(`data: ${JSON.stringify(payload.new)}\n\n`);

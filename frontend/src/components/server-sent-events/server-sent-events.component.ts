@@ -81,7 +81,6 @@ export class ServerSentEventsComponent {
     const options = { withCredentials: true };
     const eventNames = ['NEW_MESSAGE_EVENT', 'OPEN_STREAM_EVENT'];
 
-    this.openSnackBar(`Successfully connected as user id ${this.connectorUserId}`);
     this.eventSourceSubscription = this.eventSourceService.connectToServerSentEvents(url, options, eventNames)
     .subscribe({
       next: (data: any) => {
@@ -97,6 +96,7 @@ export class ServerSentEventsComponent {
         }
       },
       error: error => {
+        console.log("Connect to SSE error: ", error)
       }
     });
   }
@@ -110,6 +110,7 @@ export class ServerSentEventsComponent {
   private eventNamesLogger(eventName: string) {
     if (eventName === "OPEN_STREAM_EVENT") {
       console.log("Event source subscription - OPEN_STREAM_EVENT");
+      this.openSnackBar(`Successfully connected as user id ${this.connectorUserId}`);
       return;
     }
 

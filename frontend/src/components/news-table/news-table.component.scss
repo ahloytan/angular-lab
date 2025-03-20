@@ -14,9 +14,9 @@
 }
 
 .table-title {
-    background-color: white;
     border-radius: 10px;
     padding: 5px;
+    color: white;
 
     @include respond(mobile) {
         font-size: 0.8rem; 
