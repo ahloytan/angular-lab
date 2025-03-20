@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { finalize } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { NewsTableService } from './news-table.service';
-import { finalize } from 'rxjs';
+
 
 @Component({
   selector: 'app-news-table',
@@ -15,6 +17,7 @@ import { finalize } from 'rxjs';
 })
 
 export class NewsTableComponent {
+  private _snackBar = inject(MatSnackBar);
 
   displayedColumns: string[] = ['id', 'description', 'created_at'];
   isLoading: boolean = false;
@@ -31,7 +34,7 @@ export class NewsTableComponent {
     this.getNewsCached();
   }
 
-  async getNews(): Promise<any> {
+  getNews(): void {
     this.isLoading = true;
     this._newsTableService.getNews()
       .pipe(finalize(() => this.isLoading = false))
@@ -45,7 +48,7 @@ export class NewsTableComponent {
       })
   }
 
-  async getNewsCached(): Promise<any> {
+  getNewsCached(): void {
     this.isLoading = true;
     this._newsTableService.getNewsCached()
       .pipe(finalize(() => this.isLoading = false))
@@ -57,5 +60,12 @@ export class NewsTableComponent {
           console.error('Error fetching news:', err);
         }
       })
+  }
+
+  public openSnackBar() {
+    const message = "Please ping @ahloysius if you would like a demo of this feature about Service Worker. It's currently disabled!";
+    this._snackBar.open(message, '', {
+      duration: 3000
+    });
   }
 }
