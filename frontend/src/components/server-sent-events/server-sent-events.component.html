@@ -2,17 +2,23 @@
   <div id="sender-receiver">
     <div id="sender">
       <mat-form-field>
-        <mat-label>Enter Connector User ID</mat-label>
+        <mat-label>Enter Sender User ID</mat-label>
         <input matInput type="number" [(ngModel)]="connectorUserId" [disabled]="eventSourceSubscription">
+        <mat-hint align="start">Only numbers accepted! </mat-hint>
+        @if (connectorUserId) {
+          <button matSuffix mat-icon-button aria-label="Clear" (click)="connectorUserId=1">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
       </mat-form-field>
       @if (eventSourceSubscription) {
-        <button mat-flat-button (click)="closeConnection()" id="close-connection">
+        <button mat-flat-button (click)="closeConnection()" id="close-connection" class="connection-btn">
           <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="close"></mat-icon>
           Close SSE Connection
         </button>
 
       } @else {
-        <button mat-flat-button (click)="openConnection()">
+        <button mat-flat-button (click)="openConnection()" class="connection-btn">
           <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="play_circle"></mat-icon>
           Open SSE Connection
         </button>

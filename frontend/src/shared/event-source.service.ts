@@ -8,7 +8,7 @@ export class EventSourceService {
   private eventNames: string[] = [];
   private eventSource: any;
   private options: any;
-  private reconnectFrequencySec: number = 1000;
+  private reconnectFrequencySec: number = 1;
   private reconnectTimeout: any;
   private SSE_RECONNECT_UPPER_LIMIT: number = 64;
   private subscriber: Subscriber<Event> | null = null;
