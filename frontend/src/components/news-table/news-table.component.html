@@ -2,7 +2,7 @@
   <div>
     <div id="get-news">
       <h6 class="table-title">Cache Strategy: Freshness</h6>
-      <button mat-flat-button (click)="openSnackBar()" [disabled]="isLoading">
+      <button mat-flat-button (click)="getNews()" [disabled]="isLoading">
         <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="new_releases"></mat-icon>
         {{isLoading ? "Loading..." : "Get News"}}
       </button>
@@ -34,7 +34,7 @@
 
   <div id="news-cached">
     <div id="get-news">
-      <button mat-flat-button (click)="openSnackBar()" [disabled]="isLoading">
+      <button mat-flat-button (click)="getNewsCached()" [disabled]="isLoading">
         <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="cached"></mat-icon>
         {{isLoading ? "Loading..." : "Get Cached News"}}
       </button>

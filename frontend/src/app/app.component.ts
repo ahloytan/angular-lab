@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterOutlet } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
-// import { SwUpdateService } from '../shared/service-worker.service';
+import { SwUpdateService } from '../shared/service-worker.service';
 import { WebSocketsComponent } from '../components/web-sockets/web-sockets.component';
 import { ObservableFormComponent } from '../components/observable-form/observable-form.component';
 import { routesName } from './app.routes';
@@ -51,7 +51,7 @@ export class AppComponent {
   //https://jossef.github.io/material-design-icons-iconfont/
   constructor(
     private _router: Router,
-    // public _swUpdateService: SwUpdateService,
+    public _swUpdateService: SwUpdateService,
   ) { 
 
   }

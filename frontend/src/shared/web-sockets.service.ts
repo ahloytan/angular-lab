@@ -97,9 +97,9 @@ export class WebSocketService {
       },
       closeObserver: {
         next: () => {
-          console.log('WebSocket connection closed');
+          console.log('WebSocket connection closed closeObserver');
           this.connectionStatus$.next(ConnectionStatus.DISCONNECTED);
-        }
+        },
       }
     });
   }
