@@ -1,0 +1,17 @@
+#push-noti {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 700px;
+    margin: 1rem auto;
+}
+
+#notifications-off {
+    background-color: crimson;
+}
+
+#after-subscribe {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

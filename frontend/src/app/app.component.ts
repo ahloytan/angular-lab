@@ -46,6 +46,11 @@ export class AppComponent {
       route: routesName.WS,
       icon: 'web'
     },
+    {
+      title: 'Push Notification',
+      route: routesName.PN,
+      icon: 'web'
+    },
   ];
 
   //https://jossef.github.io/material-design-icons-iconfont/

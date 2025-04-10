@@ -1,0 +1,19 @@
+<div id="push-noti">
+    @if (isSubscribed) {
+        <div id="after-subscribe">
+            <button id="notifications-off" mat-flat-button (click)="unsubscribeToNotifications()" [disabled]="isLoading">
+                <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="notifications_off"></mat-icon>
+                {{isLoading ? "Loading..." : "Unsubscribe"}}
+            </button>
+            <button mat-flat-button (click)="broadcast()" [disabled]="isLoading">
+                <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="campaign"></mat-icon>
+                {{isLoading ? "Loading..." : "Broadcast"}}
+            </button>
+        </div>
+    } @else {
+        <button mat-flat-button (click)="subscribeToNotifications()" [disabled]="isLoading">
+            <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="notifications_active"></mat-icon>
+            {{isLoading ? "Loading..." : "Subscribe"}}
+        </button>
+    }
+</div>
