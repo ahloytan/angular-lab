@@ -21,6 +21,6 @@ export class PushNotificationService {
   }
 
   deleteSubscriber(payload: any): any {
-    return this._httpClient.delete(`${BE_ENDPOINT}/push-notification/delete-subscriber`, payload);
+    return this._httpClient.post(`${BE_ENDPOINT}/push-notification/delete-subscriber`, payload);
   }
 }

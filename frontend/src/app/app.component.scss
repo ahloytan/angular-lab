@@ -156,7 +156,7 @@
     }
   }
 
-  .pill {
+  .pill { 
     display: flex;
     align-items: center;
     --pill-accent: var(--bright-blue);
@@ -201,7 +201,7 @@
   }
 
   .pill-group .pill:nth-child(6n + 5) {
-    --pill-accent: var(--lime-zing)
+    --pill-accent: var(--amber-glow)
   }
 
   .pill-group svg {

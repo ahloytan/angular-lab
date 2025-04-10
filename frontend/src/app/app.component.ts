@@ -23,7 +23,7 @@ import { routesName } from './app.routes';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'angular-observables';
+  title = 'angular-lab';
   session: any;
   links = [
     {
@@ -49,7 +49,7 @@ export class AppComponent {
     {
       title: 'Push Notification',
       route: routesName.PN,
-      icon: 'web'
+      icon: 'notification_add'
     },
   ];
 

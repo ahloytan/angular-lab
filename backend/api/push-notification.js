@@ -17,17 +17,17 @@ const vapidKeys = {
 router.post('/', async (req, res) => {
   try {
     const subscriber  = req.body;
-
     const { data, error } = await supabase
       .from('notification')
       .insert({
+        uid: subscriber.keys.p256dh,
         subscription: JSON.stringify(subscriber)
       })
       .select();
 
     if (error) throw error;
       
-    console.info(`Subscription successfully stored in DB. Data: ${data}`);
+    console.info(`Subscription successfully stored in DB. Data: ${JSON.stringify(data)}`);
     res.json({ success: true, data });
 
   } catch (error) {
@@ -36,19 +36,18 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.delete('/delete-subscriber', async (req, res) => {
+router.post('/delete-subscriber', async (req, res) => {
   try {
-    const subscriber  = req.body;
-
+    const { userId } = req.body;
     const { data, error } = await supabase
       .from('notification')
       .delete()
-      .eq('id', 1)
+      .eq('uid', userId)
       .select();
 
     if (error) throw error;
       
-    console.info(`Subscription successfully deleted in DB. Data: ${data}`);
+    console.info(`Subscription successfully deleted in DB. Data: ${JSON.stringify(data)}`);
     res.json({ success: true, data });
 
   } catch (error) {
@@ -87,7 +86,7 @@ router.get('/broadcast', async(req, res) => {
       .select();
 
       if (error) throw error;
-      const allSubscriptions = data;
+      const allSubscriptions = data?.map((subscription) => JSON.parse(subscription.subscription));
   
       Promise.all(allSubscriptions?.map(sub => webpush.sendNotification(
         sub, JSON.stringify(notificationPayload) )))

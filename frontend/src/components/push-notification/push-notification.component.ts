@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { SwPush } from '@angular/service-worker';
 import { PushNotificationService } from './push-notification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { finalize, take } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-push-notification',
@@ -18,8 +18,8 @@ export class PushNotificationComponent {
 
   isLoading: boolean = false;
   isSubscribed: boolean = false;
+  userId: string = "";
   private _snackBar = inject(MatSnackBar);
-
 
   constructor(
     private swPush: SwPush,
@@ -40,6 +40,7 @@ export class PushNotificationComponent {
   }
 
   subscribeToNotifications(): void {
+    this.isLoading = true;
     let snackbarMsg = "You have successfully subscribed to notifications";
     this.swPush.requestSubscription({
       serverPublicKey: this.VAPID_PUBLIC_KEY
@@ -47,11 +48,12 @@ export class PushNotificationComponent {
     .then((sub) => {
       console.log("Notification Subscription: ", sub);
       this._pushNotiService.addPushSubscriber(sub).subscribe({
-        next: () => {
+        next: (data) => {
           this.isSubscribed = true;
-          console.log('Sent push subscription object to server.')
+          console.log("CHOMIk", data.data[0].uid)
+          this.userId = data.data[0].uid;
         },
-        error: (err) =>  console.log('Could not send subscription object to server, reason: ', err)
+        error: (err) => console.log('Could not send subscription object to server, reason: ', err)
       })
     })
     .catch(err => {
@@ -59,20 +61,30 @@ export class PushNotificationComponent {
       snackbarMsg = errorMsg;
       console.error(errorMsg, err)
     })
-    .finally(() => this.openSnackBar(snackbarMsg))
+    .finally(() => {
+      this.isLoading = false;
+      this.openSnackBar(snackbarMsg)
+    })
   }
 
   unsubscribeToNotifications(): void {
     let snackbarMsg = "Now you are unsubscribed";
-    this.swPush?.unsubscribe()
-    .then(() => {})
-    .catch((err) => {
-      snackbarMsg = "Something went wrong with the unsubscription"
-      console.log('Unsubscription failed', err)
-    })
-    .finally(() => {
+    this.swPush?.unsubscribe();
+    if (!this.userId) return;
+
+    this._pushNotiService.deleteSubscriber({userId: this.userId})
+    .pipe(finalize(() => {
       this.isSubscribed = false;
       this.openSnackBar(snackbarMsg)
+    }))
+    .subscribe({
+      next: () => {
+        
+      },
+      error: (err: any) => {
+        snackbarMsg = "Something went wrong with the unsubscription";
+        console.log('Unsubscription failed', err)
+      }
     });
   }
 
