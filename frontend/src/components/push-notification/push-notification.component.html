@@ -1,6 +1,9 @@
 <div id="push-noti">
     @if (isSubscribed) {
         <div id="after-subscribe">
+            <div class="text-center">
+                <mat-icon id="app-badge" aria-hidden="false" aria-label="refresh icon" fontIcon="notifications_on" [matBadge]="notifications" (click)="clearAppBadge()"></mat-icon>
+            </div>
             <button id="notifications-off" mat-flat-button (click)="unsubscribeToNotifications()" [disabled]="isLoading">
                 <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="notifications_off"></mat-icon>
                 {{isLoading ? "Loading..." : "Unsubscribe"}}

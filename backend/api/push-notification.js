@@ -39,15 +39,7 @@ router.post('/', async (req, res) => {
 router.post('/delete-subscriber', async (req, res) => {
   try {
     const { userId } = req.body;
-    const { data, error } = await supabase
-      .from('notification')
-      .delete()
-      .eq('uid', userId)
-      .select();
-
-    if (error) throw error;
-      
-    console.info(`Subscription successfully deleted in DB. Data: ${JSON.stringify(data)}`);
+    let data = deleteSubscriber(userId);
     res.json({ success: true, data });
 
   } catch (error) {
@@ -56,8 +48,9 @@ router.post('/delete-subscriber', async (req, res) => {
   }
 })
 
-router.get('/broadcast', async(req, res) => {
+router.post('/broadcast', async(req, res) => {
     try {
+      const { userId } = req.body;
       webpush.setVapidDetails(
         'mailto:aloysius.dmit@gmail.com',
         vapidKeys.publicKey,
@@ -68,11 +61,15 @@ router.get('/broadcast', async(req, res) => {
         "notification": {
           "title": "Angular News",
           "body": "Newsletter Available!",
+          "badgeCount": 50,
           "icon": "assets/main-page-logo-small-hat.png",
           "vibrate": [100, 50, 100],
           "data": {
               "dateOfArrival": Date.now(),
-              "primaryKey": 1
+              "primaryKey": 1,
+              "onActionClick": {
+                "default": {"operation": "openWindow", "url": "https://ahloytan.netlify.app"}
+              }
           },
           "actions": [{
               "action": "explore",
@@ -83,15 +80,18 @@ router.get('/broadcast', async(req, res) => {
   
       const { data, error } = await supabase
       .from('notification')
-      .select();
+      .select()
+      // .neq('uid', userId);
 
       if (error) throw error;
       const allSubscriptions = data?.map((subscription) => JSON.parse(subscription.subscription));
   
       Promise.all(allSubscriptions?.map(sub => webpush.sendNotification(
         sub, JSON.stringify(notificationPayload) )))
-        .then(() => res.json({ success: true, key: allSubscriptions.keys.p256dh }))
+        .then(() => res.json({ success: true, key: allSubscriptions }))
         .catch(err => {
+            console.log("ERROR LA", sub);
+            deleteSubscriber(sub.uid);
             console.error("Error sending notification, reason: ", err);
             res.sendStatus(500);
         }
@@ -102,5 +102,19 @@ router.get('/broadcast', async(req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
 })
+
+async function deleteSubscriber(userId) {
+  const { data, error } = await supabase
+    .from('notification')
+    .delete()
+    .eq('uid', userId)
+    .select();
+
+  if (error) throw error;
+    
+  console.info(`Subscription successfully deleted in DB. Data: ${JSON.stringify(data)}`);
+
+  return data;
+}
 
 export default router;

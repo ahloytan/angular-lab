@@ -32,7 +32,7 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'News Table Page',
+      title: 'News Table',
       route: routesName.NEWS,
       icon: 'table_chart'
     },

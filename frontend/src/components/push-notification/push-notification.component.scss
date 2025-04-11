@@ -13,5 +13,13 @@
 #after-subscribe {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 2rem;
+}
+
+#app-badge {
+    cursor: pointer;
+}
+
+.text-center {
+    text-align: center;
 }

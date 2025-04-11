@@ -16,8 +16,8 @@ export class PushNotificationService {
     return this._httpClient.post(`${BE_ENDPOINT}/push-notification`, payload);
   }
 
-  broadcast(): Observable<any> {
-    return this._httpClient.get(`${BE_ENDPOINT}/push-notification/broadcast`);
+  broadcast(payload: any): Observable<any> {
+    return this._httpClient.post(`${BE_ENDPOINT}/push-notification/broadcast`, payload);
   }
 
   deleteSubscriber(payload: any): any {
