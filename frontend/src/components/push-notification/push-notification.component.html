@@ -1,22 +1,25 @@
 <div id="push-noti">
+    <div id="after-subscribe"> 
     @if (isSubscribed) {
-        <div id="after-subscribe">
-            <div class="text-center">
-                <mat-icon id="app-badge" aria-hidden="false" aria-label="refresh icon" fontIcon="notifications_on" [matBadge]="notifications" (click)="clearAppBadge()"></mat-icon>
-            </div>
-            <button id="notifications-off" mat-flat-button (click)="unsubscribeToNotifications()" [disabled]="isLoading">
-                <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="notifications_off"></mat-icon>
-                {{isLoading ? "Loading..." : "Unsubscribe"}}
-            </button>
-            <button mat-flat-button (click)="broadcast()" [disabled]="isLoading">
-                <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="campaign"></mat-icon>
-                {{isLoading ? "Loading..." : "Broadcast"}}
-            </button>
+        <div class="text-center">
+            <mat-icon id="app-badge" aria-hidden="false" aria-label="refresh icon" fontIcon="notifications_on" [matBadge]="notifications" (click)="clearAppBadge()"></mat-icon>
         </div>
+        <button id="notifications-off" mat-flat-button (click)="unsubscribeToNotifications()" [disabled]="isLoading">
+            <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="notifications_off"></mat-icon>
+            {{isLoading ? "Loading..." : "Unsubscribe"}}
+        </button>
+        <button mat-flat-button (click)="broadcast()" [disabled]="isLoading">
+            <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="campaign"></mat-icon>
+            {{isLoading ? "Loading..." : "Broadcast"}}
+        </button>
     } @else {
-        <button mat-flat-button (click)="subscribeToNotifications()" [disabled]="isLoading">
+        <button mat-flat-button (click)="subscribeToNotifications()" [disabled]="isLoading || isServiceWorkerDisabled">
             <mat-icon aria-hidden="false" aria-label="refresh icon" fontIcon="notifications_active"></mat-icon>
             {{isLoading ? "Loading..." : "Subscribe"}}
         </button>
+        @if (isServiceWorkerDisabled) {
+            <p class="error">Service worker is not enabled on this device! <br>Please contact &#64;ahloysius for enquires</p>
+        }
     }
+</div>
 </div>

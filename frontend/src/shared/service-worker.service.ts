@@ -35,6 +35,10 @@ export class SwUpdateService {
     });
   }
 
+  isEnabled(): boolean {
+    return this.swUpdate.isEnabled;
+  }
+
   reloadSite(): void {
     location.reload();
   }

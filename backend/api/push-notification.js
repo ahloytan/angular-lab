@@ -59,8 +59,8 @@ router.post('/broadcast', async(req, res) => {
   
       const notificationPayload = {
         "notification": {
-          "title": "Angular News",
-          "body": "Newsletter Available!",
+          "title": "来财 来, 来财 来, 财从八方来, 来财 来",
+          "body": "Everyone, get in here!",
           "badgeCount": 50,
           "icon": "assets/main-page-logo-small-hat.png",
           "vibrate": [100, 50, 100],
@@ -68,7 +68,8 @@ router.post('/broadcast', async(req, res) => {
               "dateOfArrival": Date.now(),
               "primaryKey": 1,
               "onActionClick": {
-                "default": {"operation": "openWindow", "url": "https://ahloytan.netlify.app"}
+                "default": {"operation": "openWindow", "url": "https://ahloytan.netlify.app"},
+                "baz": {"operation": "navigateLastFocusedOrOpen", "url": "https://ng-obs.vercel.app"},
               }
           },
           "actions": [{
@@ -90,8 +91,8 @@ router.post('/broadcast', async(req, res) => {
         sub, JSON.stringify(notificationPayload) )))
         .then(() => res.json({ success: true, key: allSubscriptions }))
         .catch(err => {
-            console.log("ERROR LA", sub);
-            deleteSubscriber(sub.uid);
+            // console.log("ERROR LA", sub);
+            // deleteSubscriber(sub.uid);
             console.error("Error sending notification, reason: ", err);
             res.sendStatus(500);
         }

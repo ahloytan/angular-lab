@@ -6,6 +6,7 @@ import { SwPush } from '@angular/service-worker';
 import { PushNotificationService } from './push-notification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs/operators';
+import { SwUpdateService } from '../../shared/service-worker.service';
 
 @Component({
   selector: 'app-push-notification',
@@ -19,23 +20,26 @@ export class PushNotificationComponent {
 
   isLoading: boolean = false;
   isSubscribed: boolean = false;
+  isServiceWorkerDisabled: boolean = false;
   notifications: number | undefined = 15;
-  userId: string = "";
+  userId: string | null = null;
   private _snackBar = inject(MatSnackBar);
 
   constructor(
     private swPush: SwPush,
+    public _swUpdateService: SwUpdateService,
     private _pushNotiService: PushNotificationService 
   ) {
     this.swPush.notificationClicks.subscribe((arg) => {
         console.log(
+          arg,
           'Action: ' + arg.action,
           'Notification data: ' + arg.notification.data,
           'Notification data.url: ' + arg.notification.data.url,
           'Notification data.body: ' + arg.notification.body,
         );
         
-        if (arg.action === 'explore') {
+        if (arg.action === 'explore' || arg.action === 'default') {
           window.open("https://ahloytan.netlify.app", '_blank')?.focus();
         }
      });
@@ -56,6 +60,12 @@ export class PushNotificationComponent {
 
   async ngOnInit() {
     /** https://push.foo/ **/
+    this.isServiceWorkerDisabled = !this._swUpdateService.isEnabled();
+    this.openSnackBar("INITED");
+    if (!this.userId) {
+      this.notifications = 0;
+      (navigator as any).setAppBadge(0);
+    }
   }
 
   subscribeToNotifications(): void {
@@ -77,11 +87,11 @@ export class PushNotificationComponent {
     .catch(err => {
       let errorMsg = "Could not subscribe to notifications. Note: if you are on mobile, you have to add the app as a shortcut 'Add to Home Screen' for it to work. Contact @ahloysius for any clarifications!";
       snackbarMsg = errorMsg;
-      console.error(errorMsg, err)
+      console.error(errorMsg, err);
     })
     .finally(() => {
       this.isLoading = false;
-      this.openSnackBar(snackbarMsg)
+      this.openSnackBar(snackbarMsg);
     })
   }
 
@@ -94,7 +104,10 @@ export class PushNotificationComponent {
     if (!this.userId) return;
 
     this._pushNotiService.deleteSubscriber({userId: this.userId})
-    .pipe(finalize(() => this.openSnackBar(snackbarMsg)))
+    .pipe(finalize(() => {
+      this.userId = null;
+      this.openSnackBar(snackbarMsg)
+    }))
     .subscribe({
       next: () => {
         
@@ -133,9 +146,9 @@ export class PushNotificationComponent {
     });
   }
 
-  ngOnDestroy() {
-    this.unsubscribeToNotifications();
-  }
+  // ngOnDestroy() {
+  //   this.unsubscribeToNotifications();
+  // }
 
   @HostListener('window:beforeunload')
   onDestroy() {
