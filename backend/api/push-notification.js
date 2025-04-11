@@ -68,8 +68,7 @@ router.post('/broadcast', async(req, res) => {
               "dateOfArrival": Date.now(),
               "primaryKey": 1,
               "onActionClick": {
-                "default": {"operation": "openWindow", "url": "https://ahloytan.netlify.app"},
-                "baz": {"operation": "navigateLastFocusedOrOpen", "url": "https://ng-obs.vercel.app"},
+                "default": {"operation": "openWindow", "url": "https://ng-obs.vercel.app/push-notification"}              
               }
           },
           "actions": [{
@@ -87,12 +86,19 @@ router.post('/broadcast', async(req, res) => {
       if (error) throw error;
       const allSubscriptions = data?.map((subscription) => JSON.parse(subscription.subscription));
   
-      Promise.all(allSubscriptions?.map(sub => webpush.sendNotification(
-        sub, JSON.stringify(notificationPayload) )))
-        .then(() => res.json({ success: true, key: allSubscriptions }))
+      Promise.allSettled(allSubscriptions?.map(sub => webpush.sendNotification(sub, JSON.stringify(notificationPayload))))
+        .then((results) => {
+          const failed = results.filter(result => result.status === 'rejected');
+          const succeeded = results.filter(result => result.status === 'fulfilled');
+      
+          if (failed.length > 0) {
+            console.warn(`${failed.length} notifications failed.`);
+            failed.forEach((fail, index) => console.error(`Failure ${index + 1}:`, fail.reason));
+          }
+
+          res.json({ success: true, key: allSubscriptions, succeeded: succeeded.length, failed: failed.length })
+        })
         .catch(err => {
-            // console.log("ERROR LA", sub);
-            // deleteSubscriber(sub.uid);
             console.error("Error sending notification, reason: ", err);
             res.sendStatus(500);
         }

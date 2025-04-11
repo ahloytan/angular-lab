@@ -31,37 +31,43 @@ export class PushNotificationComponent {
     private _pushNotiService: PushNotificationService 
   ) {
     this.swPush.notificationClicks.subscribe((arg) => {
-        console.log(
-          arg,
-          'Action: ' + arg.action,
-          'Notification data: ' + arg.notification.data,
-          'Notification data.url: ' + arg.notification.data.url,
-          'Notification data.body: ' + arg.notification.body,
-        );
-        
-        if (arg.action === 'explore' || arg.action === 'default') {
-          window.open("https://ahloytan.netlify.app", '_blank')?.focus();
-        }
+      console.log(
+        arg,
+        'Action: ' + arg.action,
+        'Notification data: ' + arg.notification.data,
+        'Notification data.url: ' + arg.notification.data.url,
+        'Notification data.body: ' + arg.notification.body,
+      );
+      
+      if (arg.action === 'explore' || arg.action === 'default') {
+        window.open("https://ahloytan.netlify.app", '_blank')?.focus();
+      }
      });
 
      /** https://stackoverflow.com/questions/54138763/open-pwa-when-clicking-on-push-notification-handled-by-service-worker-ng7-andr **/
      /** https://angular.dev/ecosystem/service-workers/push-notifications **/
      /** https://web.dev/articles/push-notifications-web-push-protocol **/
-     this.swPush.messages.subscribe((messages: any) => {
-          const badgeCount = messages.notification?.badgeCount;
-          
-          if(badgeCount || 'setAppBadge' in navigator) {
-            this.notifications = badgeCount;
-            (navigator as any).setAppBadge(badgeCount);
-          }
-        }
-      )
+    this.swPush.messages.subscribe((messages: any) => {
+      const badgeCount = messages.notification?.badgeCount;
+      
+      if(badgeCount || 'setAppBadge' in navigator) {
+        this.notifications = badgeCount;
+        (navigator as any).setAppBadge(badgeCount);
+      }
+    })
   }
 
   async ngOnInit() {
     /** https://push.foo/ **/
     this.isServiceWorkerDisabled = !this._swUpdateService.isEnabled();
-    this.openSnackBar("INITED");
+
+    const uid = localStorage.getItem("uid");
+    this.openSnackBar(`INITED ${uid}`);
+    if (uid) {
+      this.isSubscribed = true;
+      this.userId = uid
+    }
+
     if (!this.userId) {
       this.notifications = 0;
       (navigator as any).setAppBadge(0);
@@ -80,6 +86,7 @@ export class PushNotificationComponent {
         next: (data) => {
           this.isSubscribed = true;
           this.userId = data.data[0].uid;
+          localStorage.setItem("uid", data.data[0].uid);
         },
         error: (err) => console.log('Could not send subscription object to server, reason: ', err)
       })
@@ -106,6 +113,7 @@ export class PushNotificationComponent {
     this._pushNotiService.deleteSubscriber({userId: this.userId})
     .pipe(finalize(() => {
       this.userId = null;
+      localStorage.clear();
       this.openSnackBar(snackbarMsg)
     }))
     .subscribe({
