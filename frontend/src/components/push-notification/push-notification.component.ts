@@ -19,9 +19,10 @@ export class PushNotificationComponent {
   readonly VAPID_PUBLIC_KEY: string = "BG_zMWBGo_wLNFpFiw7zXOeldeXqtcgi7pT-Z-ph4HLFGUckHE9GJIxGT0aN6YoVoIuXEWgYprHDwh7i5622dLs";
 
   isLoading: boolean = false;
-  isSubscribed: boolean = false;
   isServiceWorkerDisabled: boolean = false;
-  notifications: number | undefined = 15;
+  isSubscribed: boolean = false;
+  lastSubmittedTime: number = 0;
+  notifications: number = 0;
   userId: string | null = null;
   private _snackBar = inject(MatSnackBar);
 
@@ -51,8 +52,9 @@ export class PushNotificationComponent {
       const badgeCount = messages.notification?.badgeCount;
       
       if(badgeCount || 'setAppBadge' in navigator) {
-        this.notifications = badgeCount;
-        (navigator as any).setAppBadge(badgeCount);
+        // this.notifications = badgeCount;
+        this.notifications += 1;
+        (navigator as any).setAppBadge(this.notifications);
       }
     })
   }
@@ -62,7 +64,7 @@ export class PushNotificationComponent {
     this.isServiceWorkerDisabled = !this._swUpdateService.isEnabled();
 
     const uid = localStorage.getItem("uid");
-    this.openSnackBar(`INITED ${uid}`);
+    this.openSnackBar(`UID: ${uid}`);
     if (uid) {
       this.isSubscribed = true;
       this.userId = uid
@@ -128,6 +130,13 @@ export class PushNotificationComponent {
   }
 
   broadcast(): void {
+    const isUserSpamming = this.isSpammed(this.lastSubmittedTime, 2500);
+    if (isUserSpamming) {
+      this.openSnackBar("Chill leh don't spam, wait 2.5s");
+      return;
+    }
+    this.lastSubmittedTime = Date.now();
+
     let snackbarMsg = "Broadcast sent successfully";
     this._pushNotiService.broadcast({userId: this.userId})
     .pipe(finalize(() => this.openSnackBar(snackbarMsg)))
@@ -144,7 +153,7 @@ export class PushNotificationComponent {
   clearAppBadge(): void {
     if (navigator.clearAppBadge) {
       navigator.clearAppBadge();
-      this.notifications = undefined;
+      this.notifications = 0;
     }
   }
 
@@ -152,6 +161,10 @@ export class PushNotificationComponent {
     this._snackBar.open(message, '', {
       duration: 3000
     });
+  }
+
+  private isSpammed(field: any, milliseconds: number): boolean {
+    return (Date.now() - field) < milliseconds;
   }
 
   // ngOnDestroy() {
