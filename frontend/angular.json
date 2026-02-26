@@ -78,8 +78,9 @@
           "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
+            "browsers": ["chromium"],
             "polyfills": [
               "zone.js",
               "zone.js/testing"
