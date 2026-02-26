@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as bp;
 
 #footer {
   text-align: center;
@@ -35,7 +35,7 @@
 }
 
 .chipi-cat {
-  @include respond(mobile) {
+  @include bp.respond(mobile) {
     display: none;
   }
 }
@@ -151,7 +151,7 @@
     flex-wrap: wrap;
     gap: 1.25rem;
 
-    @include respond(mobile) {
+    @include bp.respond(mobile) {
         flex-direction: row;
     }
   }

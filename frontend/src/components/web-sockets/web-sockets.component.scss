@@ -1,4 +1,4 @@
-@import '../../mixins';
+@use '../../mixins' as bp;
 
 #ws-container {
     display: flex;
@@ -7,7 +7,7 @@
     max-width: 700px;
     margin: 1rem auto;
 
-    @include respond(mobile) {
+    @include bp.respond(mobile) {
         display: inherit;
     }
 }
@@ -124,7 +124,7 @@ input, select, textarea {
   border-radius: 10px;
   padding: 5px;
 
-  @include respond(mobile) {
+  @include bp.respond(mobile) {
       font-size: 0.8rem; 
   }
 }

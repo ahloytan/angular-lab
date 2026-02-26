@@ -1,4 +1,4 @@
-@import '../../mixins';
+@use '../../mixins' as bp;
 
 #sse-container {
     display: flex;
@@ -7,7 +7,7 @@
     max-width: 700px;
     margin: 1rem auto;
 
-    @include respond(mobile) {
+    @include bp.respond(mobile) {
         display: inherit;
     }
 }
@@ -19,7 +19,7 @@
     align-items: center;
     gap: 4rem;
 
-    @include respond(mobile) {
+    @include bp.respond(mobile) {
         display: inherit;
     }
 }
@@ -28,7 +28,7 @@
     display: flex;
     flex-direction: column;
 
-    @include respond(mobile) {
+    @include bp.respond(mobile) {
         margin-bottom: 5rem;    
     }
 }

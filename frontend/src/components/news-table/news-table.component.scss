@@ -1,4 +1,4 @@
-@import '../../mixins';
+@use '../../mixins' as bp;
 
 .news-table, #get-news {
     display: flex;
@@ -18,7 +18,7 @@
     padding: 5px;
     color: white;
 
-    @include respond(mobile) {
+    @include bp.respond(mobile) {
         font-size: 0.8rem; 
     }
 }
