@@ -41,7 +41,7 @@ https://codesandbox.io/p/github/ahloytan/angular-observables/master
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 # Notes & Useful Links
-1. To enable a successful connection to the backend, please a folder called `environments` within the `src` folder. Next, create an `environment.ts`. 
+1. To enable a successful connection to the backend, please create a file named `environments.ts` in your `src/environments/` folder and add the following content
 ```
 import { isDevMode } from "@angular/core";
 
