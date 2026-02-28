@@ -41,5 +41,16 @@ https://codesandbox.io/p/github/ahloytan/angular-observables/master
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 # Notes & Useful Links
-I have compiled all the useful notes, observations, and references in this [doc](https://docs.google.com/document/d/1kuLCCH6SVQFD8uOz3nnUn6rl0u9hVVCSqupcJk7sbTQ/edit?usp=sharing) for easy reference!
+1. To enable a successful connection to the backend, please a folder called `environments` within the `src` folder. Next, create an `environment.ts`. 
+```
+import { isDevMode } from "@angular/core";
+
+export const ENV = {
+    production: false
+};
+
+export const BE_ENDPOINT_WS = isDevMode() ? `localWebSocketUrlHere` : `actualWebSocketUrlHere`;
+export const BE_ENDPOINT = isDevMode() ? `localBackendServiceEndPoint` : `actualBackendServiceEndPoint`;
+```
+2. I have compiled all the useful notes, observations, and references in this [doc](https://docs.google.com/document/d/1kuLCCH6SVQFD8uOz3nnUn6rl0u9hVVCSqupcJk7sbTQ/edit?usp=sharing) for easy reference!
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
